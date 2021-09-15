@@ -220,6 +220,12 @@ int main() {
                     tok = strtok(NULL, sep);
                 }
 
+                // putting this somehow fucks bg processes up
+                if (strcmp(args_arr[0], "") == 0) {
+                    raise(SIGSEGV);
+                    continue;
+                }
+
                 // check if command is custom or system
                 int custom = 0;
                 for (int i = 0; i < NUM_CMDS; i++) {
