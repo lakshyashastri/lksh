@@ -60,10 +60,11 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
     }
     
     // get process state
-    char stat_file_path[MAX_LENGTH];
     char states[MAX_LENGTH];
     for (int i = 0; i < num_bg; i++) {
-        sprintf(stat_file_path, "/proc/%d/stat", procs[i] -> id); 
+        char stat_file_path[MAX_LENGTH] = {0};
+        sprintf(stat_file_path, "/proc/%d/stat", procs[i] -> id);
+        
         FILE *stat_file = fopen(stat_file_path, "r");
         char trash[MAX_LENGTH];
         fscanf(stat_file, "%s %s %c", trash, trash, &states[i]);
