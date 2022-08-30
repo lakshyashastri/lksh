@@ -1,3 +1,5 @@
+#include "lksh.h"
+
 #include "includes/libs.h"
 #include "includes/consts.h"
 
@@ -20,12 +22,12 @@ int main() {
     hostname[MAX_LENGTH - 1] = '\0';
     gethostname(hostname, MAX_LENGTH);
 
-    // get current working directory
-    char init_cwd[MAX_LENGTH];
-    init_cwd[MAX_LENGTH - 1] = '\0';
-    getcwd(init_cwd, MAX_LENGTH);
-    
-    // var to keep track of current working directory
+    // get initial working directory ie root
+    char ROOT[MAX_LENGTH];
+    ROOT[MAX_LENGTH - 1] = '\0';
+    getcwd(ROOT, MAX_LENGTH);
+
+    // variable to keep tra"ck of relative working directory
     char CWD[MAX_LENGTH] = "~";
 
     while (1) {
@@ -58,10 +60,8 @@ int main() {
             token = strtok(NULL, sep);
         }
 
-        // remove trailing "\n" from last element in array: all of these work
-        // splits[split_count - 1][strcspn(splits[split_count - 1], "\n")] = 0;
-        // strtok(splits[split_count - 1], "\n");
-        // splits[split_count - 1][strlen(splits[split_count - 1]) - 1] = 0;
+        // remove trailing "\n" from last element in splits array
+        strtok(splits[split_count - 1], "\n");
 
         // check if command is valid
         if (split_count == 0) {
@@ -74,8 +74,16 @@ int main() {
                 break;
             }
         }
-        for (int i = 0; i < split_count; i++) {
-            printf("%s\n", splits[i]);
+        
+        // if not valid
+        if (!valid) {
+            printf("%s is not a valid command\n", splits[0]);
+            continue;
+        }
+
+        // check commands
+        if (strcmp(splits[0], "pwd") == 0) {
+            lksh_pwd();
         }
     }
 }

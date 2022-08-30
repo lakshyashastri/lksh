@@ -1,3 +1,5 @@
+#include "../lksh.h"
+
 #include "../includes/libs.h"
 #include "../includes/consts.h"
 
@@ -6,5 +8,5 @@ char *lksh_pwd() {
     path[MAX_LENGTH - 1] = '\0';
     getcwd(path, MAX_LENGTH);
 
-    return path;
+    printf("%s\n", path);
 }
