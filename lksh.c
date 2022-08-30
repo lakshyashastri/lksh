@@ -4,14 +4,15 @@
 #include "includes/consts.h"
 
 #include "lksh_cmds/lksh_pwd.c"
+#include "lksh_cmds/lksh_echo.c"
 
 int main() {
     // clear terminal screen at initialization
     cls();
 
     // list of valid commands
-    char *CMDS = {"pwd"};
-    int num_commands = sizeof(CMDS[0]) / sizeof(char);
+    int NUM_CMDS = 2;
+    char *CMDS[2] = {"pwd", "echo"};
 
     // get OS name
     struct utsname unameInfo;
@@ -63,13 +64,15 @@ int main() {
         // remove trailing "\n" from last element in splits array
         strtok(splits[split_count - 1], "\n");
 
-        // check if command is valid
-        if (split_count == 0) {
+        // empty enter
+        if (strcmp(splits[0], "\n") == 0) {
             continue;
         }
+
+        // check if command is valid
         int valid = 0;
-        for (int i = 0; i < split_count; i++) {
-            if (strcmp(splits[0], &CMDS[i]) == 0) {
+        for (int i = 0; i < NUM_CMDS; i++) {
+            if (strcmp(splits[0], CMDS[i]) == 0) {
                 valid = 1;
                 break;
             }
@@ -81,9 +84,11 @@ int main() {
             continue;
         }
 
-        // check commands
+        // execute commands
         if (strcmp(splits[0], "pwd") == 0) {
             lksh_pwd();
+        } else if (strcmp(splits[0], "echo") == 0) {
+            lksh_echo(splits, split_count);
         }
     }
 }
