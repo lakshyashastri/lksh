@@ -1,12 +1,15 @@
-#include "includes.h"
-#include "consts.h"
+#include "includes/libs.h"
+#include "includes/consts.h"
+
+#include "lksh_cmds/lksh_pwd.c"
 
 int main() {
     // clear terminal screen at initialization
     cls();
 
     // list of valid commands
-    char *COMMANDS = {"pwd"};
+    char *CMDS = {"pwd"};
+    int num_commands = sizeof(CMDS[0]) / sizeof(char);
 
     // get OS name
     struct utsname unameInfo;
@@ -55,13 +58,24 @@ int main() {
             token = strtok(NULL, sep);
         }
 
-        // check for command
+        // remove trailing "\n" from last element in array: all of these work
+        // splits[split_count - 1][strcspn(splits[split_count - 1], "\n")] = 0;
+        // strtok(splits[split_count - 1], "\n");
+        // splits[split_count - 1][strlen(splits[split_count - 1]) - 1] = 0;
+
+        // check if command is valid
         if (split_count == 0) {
             continue;
         }
-
-        
-        
-
+        int valid = 0;
+        for (int i = 0; i < split_count; i++) {
+            if (strcmp(splits[0], &CMDS[i]) == 0) {
+                valid = 1;
+                break;
+            }
+        }
+        for (int i = 0; i < split_count; i++) {
+            printf("%s\n", splits[i]);
+        }
     }
 }

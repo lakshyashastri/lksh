@@ -5,6 +5,7 @@
         "stdio.h": "c",
         "stdlib.h": "c",
         "unistd.h": "c",
-        "consts.h": "c"
+        "consts.h": "c",
+        "libs.h": "c"
     }
 }
