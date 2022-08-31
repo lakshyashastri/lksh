@@ -24,9 +24,9 @@ int main() {
     int NUM_CMDS = 3;
     char *CMDS[3] = {"pwd", "echo", "cd"};
 
-    // get OS name
-    struct utsname unameInfo;
-    uname(&unameInfo);
+    // get username
+    struct passwd *username;
+    username = getpwuid(getuid());
     
     // get system name
     char hostname[MAX_LENGTH];
@@ -51,7 +51,7 @@ int main() {
         }
 
         // shell prompt
-        printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, hostname, COLOR_RED, COLOR_BLUE, unameInfo.sysname, COLOR_PURPLE, CWD, COLOR_RESET);
+        printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_BLUE, hostname, COLOR_PURPLE, CWD, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
 
         // parse ;
