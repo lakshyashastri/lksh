@@ -51,7 +51,8 @@ int main() {
         }
 
         // shell prompt
-        printf("<%s@%s:%s> ", hostname, unameInfo.sysname, CWD);
+        // printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, hostname, COLOR_RED, COLOR_BLUE, unameInfo.sysname, COLOR_PURPLE, CWD, COLOR_RESET);
+        printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, hostname, COLOR_RED, COLOR_BLUE, unameInfo.sysname, COLOR_PURPLE, CWD, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
 
         // parse input
