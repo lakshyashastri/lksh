@@ -5,14 +5,24 @@
 
 #include "lksh_cmds/lksh_pwd.c"
 #include "lksh_cmds/lksh_echo.c"
+#include "lksh_cmds/lksh_cd.c"
+
+// initial working directory ie root
+char ROOT[MAX_LENGTH];
+
+// variable to keep track of current working directory (relative from ~)
+char CWD[MAX_LENGTH] = "~";
+
+// variable to keep track of previous working directory (absolute from actual root)
+char PREV_WD[MAX_LENGTH] = "~";
 
 int main() {
     // clear terminal screen at initialization
     cls();
 
     // list of valid commands
-    int NUM_CMDS = 2;
-    char *CMDS[2] = {"pwd", "echo"};
+    int NUM_CMDS = 3;
+    char *CMDS[3] = {"pwd", "echo", "cd"};
 
     // get OS name
     struct utsname unameInfo;
@@ -24,12 +34,8 @@ int main() {
     gethostname(hostname, MAX_LENGTH);
 
     // get initial working directory ie root
-    char ROOT[MAX_LENGTH];
     ROOT[MAX_LENGTH - 1] = '\0';
     getcwd(ROOT, MAX_LENGTH);
-
-    // variable to keep tra"ck of relative working directory
-    char CWD[MAX_LENGTH] = "~";
 
     while (1) {
         // command line input
@@ -89,6 +95,8 @@ int main() {
             lksh_pwd();
         } else if (strcmp(splits[0], "echo") == 0) {
             lksh_echo(splits, split_count);
+        } else if (strcmp(splits[0], "cd") == 0) {
+            lksh_cd(splits, split_count);
         }
     }
 }
