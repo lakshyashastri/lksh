@@ -6,6 +6,7 @@
 #include "lksh_cmds/lksh_pwd.c"
 #include "lksh_cmds/lksh_echo.c"
 #include "lksh_cmds/lksh_cd.c"
+#include "lksh_cmds/lksh_ls.c"
 
 // initial working directory ie root
 char ROOT[MAX_LENGTH];
@@ -21,8 +22,8 @@ int main() {
     cls();
 
     // list of valid commands
-    int NUM_CMDS = 3;
-    char *CMDS[3] = {"pwd", "echo", "cd"};
+    int NUM_CMDS = 4;
+    char *CMDS[4] = {"pwd", "echo", "cd", "ls"};
 
     // get username
     struct passwd *username;
@@ -69,7 +70,7 @@ int main() {
 
         for (int ii = 0; ii < input_split_count; ii++) {
 
-            // parse input for space
+            // parse input for spaces and tabs
             char *sep = " \t";
             char *token;
             token = strtok(input_splitted[ii], sep);
@@ -112,6 +113,8 @@ int main() {
                 lksh_echo(splits, split_count);
             } else if (strcmp(splits[0], "cd") == 0) {
                 lksh_cd(splits, split_count);
+            } else if (strcmp(splits[0], "ls") == 0) {
+                lksh_ls(splits, split_count);
             }
         }
     }

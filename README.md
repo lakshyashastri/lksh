@@ -1,12 +1,14 @@
 # TODO
 - make command input storage dynamic to save space
 - make command split storage dynamic to save space
-- **&, ;**
+- &
 - include all .c libraries so dont have to compile all manually: use makefile
 - colour shit
 - // check commands part: make that one liner: run the function lksh_<command_name>
 - cd ignoring all but first arg when more than 1 arg is not how zsh cd behaves
 - change get_pwd to take result argument
 - transfer subtract_strings to helpers, and getcwd func too: fix all import problems
-- cd ~/dir, ~/../.. compatibility
+- cd `../~` compatibility: just replace ~ with ROOT
 - `cd ` handle
+- Fix the CMDS thing, make it dynamic
+- **DOES NOT HANDLE SPACES AND TABS AT THE END**

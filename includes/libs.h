@@ -5,3 +5,4 @@
 #include <sys/utsname.h> // uname
 #include <unistd.h> // gethostname, getcwd, chdir
 #include <pwd.h> // getpwuid
+#include <dirent.h> // ls
