@@ -38,7 +38,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
                 } else {
                     flags[2] = 1;
                 }
-                
+
             } else {
                 printf("ls: invalid option -- %s\n", splits[i]);
                 return;
@@ -81,17 +81,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         // get all files in directory
         struct dirent *dir_data;
         while ((dir_data = readdir(dir)) != NULL) {
-            dir_files[dir_files_counter] = dir_data -> d_name;
-            
-            // get item type
-            struct stat sb;
-            if (stat(dir_files[dir_files_counter], &sb) == 0 && sb.st_mode & S_IFDIR) {
-                item_type[dir_files_counter++] = 0; // directory
-            } else if (sb.st_mode & S_IXUSR) {
-                item_type[dir_files_counter++] = 1; // executable
-            } else if (sb.st_mode & S_IFREG) {
-                item_type[dir_files_counter++] = 2; // file
-            }
+            dir_files[dir_files_counter++] = dir_data -> d_name;
         }
 
         // sort in alphabetical order
@@ -106,21 +96,42 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             }
         }
 
+        // get item type info for all items in directory
         for (int j = 0; j < dir_files_counter; j++) {
-            // ignore dot files
+            // get item type
+            struct stat sb;
+            if (stat(dir_files[j], &sb) == 0 && sb.st_mode & S_IFDIR) {
+                item_type[j] = 0; // directory
+            } else if (sb.st_mode & S_IXUSR) {
+                item_type[j] = 1; // executable
+            } else if (sb.st_mode & S_IFREG) {
+                item_type[j] = 2; // file
+            }
+        }
+
+        // output file names
+        for (int j = 0; j < dir_files_counter; j++) {
+            // ignore dot files; handle -a cases
             if (dir_files[j][0] == '.') {
                 if (!flags[0] && !flags[2]) {
                     continue;
                 }
             }
 
-            // print item and colour code
-            if (item_type[j] == 0) {
-                printf("%s%s%s\n", COLOR_BLUE, dir_files[j], COLOR_RESET);
-            } else if (item_type[j] == 1) {
-                printf("%s%s%s\n", COLOR_WHITE, dir_files[j], COLOR_RESET);
-            } else if (item_type[j] == 2) {
-                printf("%s%s%s\n", COLOR_RED, dir_files[j], COLOR_RESET);
+            // no -l flags
+            if (!flags[1] && !flags[2]) {
+
+                // print item and colour code
+                if (item_type[j] == 0) {
+                    printf("%s%s%s\n", COLOR_BLUE, dir_files[j], COLOR_RESET);
+                } else if (item_type[j] == 1) {
+                    printf("%s%s%s\n", COLOR_WHITE, dir_files[j], COLOR_RESET);
+                } else if (item_type[j] == 2) {
+                    printf("%s%s%s\n", COLOR_RED, dir_files[j], COLOR_RESET);
+                }
+
+            } else {
+                printf("-l hai bhai, karta huon\n");
             }
         }
         
