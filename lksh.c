@@ -7,6 +7,7 @@
 #include "lksh_cmds/lksh_echo.c"
 #include "lksh_cmds/lksh_cd.c"
 #include "lksh_cmds/lksh_ls.c"
+#include "lksh_cmds/lksh_history.c"
 
 // initial working directory ie root
 char ROOT[MAX_LENGTH];
@@ -22,8 +23,8 @@ int main() {
     cls();
 
     // list of valid commands
-    int NUM_CMDS = 4;
-    char *CMDS[4] = {"pwd", "echo", "cd", "ls"};
+    int NUM_CMDS = 5;
+    char *CMDS[5] = {"pwd", "echo", "cd", "ls", "history"};
 
     // get username
     struct passwd *username;
@@ -54,6 +55,9 @@ int main() {
         // shell prompt
         printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
+
+        // call this only when input is not empty
+        lksh_history_write(input);
 
         // parse ;
         char *semi = ";";
@@ -115,6 +119,8 @@ int main() {
                 lksh_cd(splits, split_count);
             } else if (strcmp(splits[0], "ls") == 0) {
                 lksh_ls(splits, split_count);
+            } else if (strcmp(splits[0], "history") == 0) {
+                lksh_history(splits, split_count);
             } else {
 
                 // create execvp argument array
