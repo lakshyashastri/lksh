@@ -96,6 +96,10 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             }
         }
 
+        // block sizes for -l
+        int block_size = 0;
+        int hidden_block_size = 0;
+
         // get item type info for all items in directory
         for (int j = 0; j < dir_files_counter; j++) {
             // get item type
@@ -107,7 +111,24 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             } else if (sb.st_mode & S_IFREG) {
                 item_type[j] = 2; // file
             }
+
+            // add block size
+            if (flags[1] || flags[2]) {
+                hidden_block_size += sb.st_blocks;
+                if (dir_files[j][0] != '.') {
+                    block_size += sb.st_blocks;
+                }
+            }
         }
+
+        // total block size
+        printf("total ");
+        if (flags[1]) {
+            printf("%d", block_size);
+        } else if (flags[2]) {
+            printf("%d", hidden_block_size);
+        }
+        printf("\n");
 
         // output file names
         for (int j = 0; j < dir_files_counter; j++) {
