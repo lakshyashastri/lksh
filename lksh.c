@@ -52,7 +52,7 @@ int main() {
         }
 
         // shell prompt
-        printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_BLUE, hostname, COLOR_PURPLE, CWD, COLOR_RESET);
+        printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
 
         // parse ;

@@ -12,3 +12,5 @@
 - `cd ` handle
 - Fix the CMDS thing, make it dynamic
 - **DOES NOT HANDLE SPACES AND TABS AT THE END**
+- Colour code with red for no such file or dir and other error messages
+- ls colour coding not working when ls'ing outside current dir (up or down)
