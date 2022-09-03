@@ -14,4 +14,9 @@
 - **DOES NOT HANDLE SPACES AND TABS AT THE END**
 - Colour code with red for no such file or dir and other error messages
 - ls colour coding not working when ls'ing outside current dir (up or down)
-- ls ~/includes handle
+  - block calculate + format also when outside dir
+- ls ~/includes handle: handle ~ everywhere by replacing it with ROOT in string using [this](https://stackoverflow.com/questions/32496497/standard-function-to-replace-character-or-substring-in-a-char-array)
+- ls invalid option remove -
+- st blocks thing
+- flag handling should be more modular for future flags
+- cd .. from ~: behaviour for path display in shell

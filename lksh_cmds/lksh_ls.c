@@ -3,6 +3,7 @@
 #include "../includes/libs.h"
 #include "../includes/consts.h"
 
+// check if flag is valid
 int flag_is_valid(char *flag) {
     char *valid_flags[4] = {"-a", "-l", "-al", "-la"};
     for (int i = 0; i < 4; i++) {
@@ -11,6 +12,29 @@ int flag_is_valid(char *flag) {
         }
     }
     return 0;
+}
+
+// construct the permission string
+void create_perm_string(struct stat file_info, char ret[11]) {
+    // directory
+    ret[0] = (file_info.st_mode & S_IFDIR) ? 'd' : '-';
+
+    // user perms
+    ret[1] = (file_info.st_mode & S_IRUSR) ? 'r' : '-';
+    ret[2] = (file_info.st_mode & S_IWUSR) ? 'w' : '-';
+    ret[3] = (file_info.st_mode & S_IXUSR) ? 'x' : '-';
+
+    // group perms
+    ret[4] = (file_info.st_mode & S_IRGRP) ? 'r' : '-';
+    ret[5] = (file_info.st_mode & S_IWGRP) ? 'w' : '-';
+    ret[6] = (file_info.st_mode & S_IXGRP) ? 'x' : '-';
+
+    // other perms
+    ret[7] = (file_info.st_mode & S_IROTH) ? 'r' : '-';
+    ret[8] = (file_info.st_mode & S_IWOTH) ? 'w' : '-';
+    ret[9] = (file_info.st_mode & S_IXOTH) ? 'x' : '-';
+
+    ret[10] = '\0';
 }
 
 void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
@@ -88,7 +112,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         char temp[MAX_LENGTH];
         for (int x = 0; x < dir_files_counter; x++) {
             for (int y = x + 1; y < dir_files_counter; y++) {
-                if (strcasecmp(dir_files[x], dir_files[y]) > 0) {
+                if (strcmp(dir_files[x], dir_files[y]) > 0) { // strcasecmp for actual sort
                     strcpy(temp, dir_files[x]);
                     strcpy(dir_files[x], dir_files[y]);
                     strcpy(dir_files[y], temp);
@@ -101,7 +125,9 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         int hidden_block_size = 0;
 
         // get item type info for all items in directory
+        int max_file_size = 0;
         for (int j = 0; j < dir_files_counter; j++) {
+            
             // get item type
             struct stat sb;
             if (stat(dir_files[j], &sb) == 0 && sb.st_mode & S_IFDIR) {
@@ -112,26 +138,44 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
                 item_type[j] = 2; // file
             }
 
-            // add block size
+            // if "-l" or "-al" is there
             if (flags[1] || flags[2]) {
+                
+                // add block size
                 hidden_block_size += sb.st_blocks;
                 if (dir_files[j][0] != '.') {
                     block_size += sb.st_blocks;
                 }
+
+                // space for file size in ls -l
+                if (sb.st_size > max_file_size) {
+                    max_file_size = sb.st_size;
+                }
             }
         }
 
-        // total block size
-        printf("total ");
-        if (flags[1]) {
-            printf("%d", block_size);
-        } else if (flags[2]) {
-            printf("%d", hidden_block_size);
+        // default int file size width
+        int file_size_width = 5;
+
+        // if "-l" or "-al" is there
+        if (flags[1] || flags[2]) {
+
+            // total block size
+            printf("total ");
+            if (flags[1]) {
+                printf("%d", block_size);
+            } else if (flags[2]) {
+                printf("%d", hidden_block_size);
+            }
+            printf("\n");
+
+            // space for file size in ls -l
+            file_size_width = (max_file_size == 0) ? 1 : (log10(max_file_size) + 1);
         }
-        printf("\n");
 
         // output file names
         for (int j = 0; j < dir_files_counter; j++) {
+
             // ignore dot files; handle -a cases
             if (dir_files[j][0] == '.') {
                 if (!flags[0] && !flags[2]) {
@@ -152,7 +196,35 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
                 }
 
             } else {
-                printf("-l hai bhai, karta huon\n");
+                // get file info
+                struct stat file_info;
+                stat(dir_files[j], &file_info);
+
+                // get perm string
+                char perm_string[11];
+                create_perm_string(file_info, perm_string);
+
+                // hard links
+                int hard_links = file_info.st_nlink;
+                
+                // owner
+                struct passwd *user_id = getpwuid(file_info.st_uid);
+                
+                // group owner
+                struct group *gr = getgrgid(file_info.st_gid);
+
+                // content size
+                int size = file_info.st_size;
+
+                // time modified
+                char time[MAX_LENGTH];
+                strftime(time, sizeof(time), "%b %e %H:%M", localtime(&file_info.st_mtime));
+
+                // print
+                printf("%s  %d %s  %s  %*d %s %s\n",
+                    perm_string, hard_links, user_id -> pw_name,
+                    gr -> gr_name, file_size_width, size, time, dir_files[j]
+                    );
             }
         }
         
