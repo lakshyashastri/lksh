@@ -76,7 +76,6 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         dirs_count += 1;
     }
 
-
     for (int i = 0; i < dirs_count; i++) {
         DIR *dir = opendir(dirs[i]);
         if (dir == NULL) {
@@ -95,9 +94,12 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             printf("%s:\n", dirs[i]);
         }
 
-        // stores names of all files in directory
+        // stores relative names of all files in directory
         char *dir_files[MAX_LENGTH];
         int dir_files_counter = 0;
+
+        // stores names of all files in directory
+        char *dir_files_names[MAX_LENGTH];
 
         // stores types of all items in a directory
         int item_type[MAX_LENGTH];
@@ -105,18 +107,41 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         // get all files in directory
         struct dirent *dir_data;
         while ((dir_data = readdir(dir)) != NULL) {
-            dir_files[dir_files_counter++] = dir_data -> d_name;
+            if (dirs[i][0] == '.' && dirs[i][1] == '.') {
+                char prev_temp[MAX_LENGTH];
+                sprintf(prev_temp, "%s/%s", dirs[i], dir_data -> d_name);
+
+                // strcat(prev_temp, dirs[i]);
+                // strcat(prev_temp, "/");
+                // strcat(prev_temp, dir_data -> d_name);
+
+                dir_files[dir_files_counter] = malloc(sizeof(char) * MAX_LENGTH * 10);
+                strcpy(dir_files[dir_files_counter], prev_temp);
+
+                prev_temp[0] = '\0';
+
+            } else {
+                dir_files[dir_files_counter] = dir_data -> d_name;
+            }
+            dir_files_names[dir_files_counter++] = dir_data -> d_name;
         }
 
         // sort in alphabetical order
-        char temp[MAX_LENGTH];
+        char alpha_temp[MAX_LENGTH];
         for (int x = 0; x < dir_files_counter; x++) {
             for (int y = x + 1; y < dir_files_counter; y++) {
                 if (strcmp(dir_files[x], dir_files[y]) > 0) { // strcasecmp for actual sort
-                    strcpy(temp, dir_files[x]);
+                    strcpy(alpha_temp, dir_files[x]);
                     strcpy(dir_files[x], dir_files[y]);
-                    strcpy(dir_files[y], temp);
+                    strcpy(dir_files[y], alpha_temp);
                 }
+
+                if (strcmp(dir_files_names[x], dir_files_names[y]) > 0) {
+                    strcpy(alpha_temp, dir_files_names[x]);
+                    strcpy(dir_files_names[x], dir_files_names[y]);
+                    strcpy(dir_files_names[y], alpha_temp);
+                }
+                
             }
         }
 
@@ -132,10 +157,13 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             struct stat sb;
             if (stat(dir_files[j], &sb) == 0 && sb.st_mode & S_IFDIR) {
                 item_type[j] = 0; // directory
+
             } else if (sb.st_mode & S_IXUSR) {
                 item_type[j] = 1; // executable
+
             } else if (sb.st_mode & S_IFREG) {
                 item_type[j] = 2; // file
+
             }
 
             // if "-l" or "-al" is there
@@ -177,7 +205,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         for (int j = 0; j < dir_files_counter; j++) {
 
             // ignore dot files; handle -a cases
-            if (dir_files[j][0] == '.') {
+            if (dir_files_names[j][0] == '.') {
                 if (!flags[0] && !flags[2]) {
                     continue;
                 }
@@ -185,14 +213,14 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
 
             // no -l flags
             if (!flags[1] && !flags[2]) {
-
+                
                 // print item and colour code
                 if (item_type[j] == 0) {
-                    printf("%s%s%s\n", COLOR_BLUE, dir_files[j], COLOR_RESET);
+                    printf("%s%s%s\n", COLOR_BLUE, dir_files_names[j], COLOR_RESET);
                 } else if (item_type[j] == 1) {
-                    printf("%s%s%s\n", COLOR_WHITE, dir_files[j], COLOR_RESET);
+                    printf("%s%s%s\n", COLOR_WHITE, dir_files_names[j], COLOR_RESET);
                 } else if (item_type[j] == 2) {
-                    printf("%s%s%s\n", COLOR_RED, dir_files[j], COLOR_RESET);
+                    printf("%s%s%s\n", COLOR_RED, dir_files_names[j], COLOR_RESET);
                 }
 
             } else {
