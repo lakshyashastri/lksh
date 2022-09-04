@@ -21,7 +21,18 @@ void lksh_pinfo(char *splits[MAX_LENGTH], int split_count) {
     FILE *stat_file = fopen(stat_file_path, "r");
     char state;
     fscanf(stat_file, "%*s %*[^)]) %c", &state);
-    printf("process status: %c\n", state);
+
+    // background foreground
+    fseek(stat_file, 0, SEEK_SET);
+    char trash[MAX_LENGTH], five[MAX_LENGTH], eight[MAX_LENGTH];
+    fscanf(stat_file, "%s %s %s %s %s %s %s %s",
+    trash, trash, trash, trash, five, trash, trash, eight);
+
+    char plus = ' ';
+    if (atoi(five) == atoi(eight)) {
+        char plus = '+';
+    }
+    printf("process status: %c%c\n", state, plus);
 
     // create path to statm file for current pid
     char statm_file_path[MAX_LENGTH];
