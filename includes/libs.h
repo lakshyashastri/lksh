@@ -10,3 +10,4 @@
 #include <sys/stat.h>
 #include <grp.h>
 #include <time.h>
+#include <errno.h>
