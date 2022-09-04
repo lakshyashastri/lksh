@@ -13,6 +13,7 @@ void lksh_history(char *splits[MAX_LENGTH], int split_count) {
     char line[MAX_LENGTH];
     while (fgets(line, sizeof(line), src)) {
         printf("%s", line);
+        
         printed += 1;
         if (printed == 10) {
             break;
@@ -28,11 +29,21 @@ void lksh_history_write(char *input) {
     FILE *src = fopen(HIST, "r");
     FILE *new = fopen(BUFFER, "w+");
 
+    // check most recent addition
+    char line[MAX_LENGTH];
+    fgets(line, sizeof(line), src);
+    if (strcmp(line, input) == 0) {
+        remove(BUFFER);
+        fclose(src);
+        fclose(new);
+        return;
+    }
+    fseek(src, 0, SEEK_SET);
+
     // add most recent to new_file
     fprintf(new, "%s", input);
 
     // read current history file and write to new file
-    char line[MAX_LENGTH];
     int lines_copied = 0;
     while (fgets(line, sizeof(line), src)) {
         fprintf(new, "%s", line);

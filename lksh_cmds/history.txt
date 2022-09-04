@@ -1,20 +1,15 @@
+cd includes
+cd includes
 history
-echo nigga
-testing
-
-ok
-history
+echo echo
+echo echo echo
+echo echo
+echo test
 echo ok
-echo ok
-lets see
-
-uhh
 history
-ls ..
-yoo
-pls
-echo nigga
+ls
+cd ..
+ls
+cd includes
 ls ..
 ls
-a
-a
