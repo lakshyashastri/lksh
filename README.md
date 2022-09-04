@@ -18,6 +18,8 @@
 - flag handling should be more modular for future flags
 - cd .. from ~: behaviour for path display in shell
 
+- make mem allocs dynamic everywhere
+- `cmd ` doesn't work
 # ls
   - child dir total block size not working; also colouring
   - ls file

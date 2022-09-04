@@ -9,6 +9,7 @@
         "libs.h": "c",
         "lksh.h": "c",
         "string.h": "c",
-        "lksh_helpers.h": "c"
+        "lksh_helpers.h": "c",
+        "math.h": "c"
     }
 }

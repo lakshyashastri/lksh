@@ -198,7 +198,8 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             printf("\n");
 
             // space for file size in ls -l
-            file_size_width = (max_file_size == 0) ? 1 : (log10(max_file_size) + 1);
+            // file_size_width = (max_file_size == 0) ? 1 : (log10(max_file_size) + 1);
+            file_size_width = 7;
         }
 
         // output file names

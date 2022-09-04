@@ -1,12 +1,20 @@
-history
-cd ..
-cd includes
-ls
-history
-echo so
-echo no
-history
-ls ..
-history
-echo test
-echo ok
+pinfo 5576
+pinfo 2879
+pinfo 1985
+pinfo 17
+pinfo 1982
+pinfo 118
+pinfo 7
+pinfo 470
+pinfo
+pinfo 19
+pinfo 1
+pinfo 19
+pinfo 1461
+pinfo
+
+piiiiiiiiiiiinfo
+pinfo 25
+pinfo 11
+pinfo
+pinfo 870
