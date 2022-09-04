@@ -4,61 +4,43 @@
 // assumes that history.txt will always exist
 
 #define HIST "lksh_cmds/history.txt"
-#define STOP "lksh_cmds/hist_replace.txt" // contains line num to replace
 #define BUFFER "lksh_cmds/hist_buffer.txt"
 
 void lksh_history(char *splits[MAX_LENGTH], int split_count) {
+    FILE *src = fopen(HIST, "r");
+    
+    int printed = 0;
+    char line[MAX_LENGTH];
+    while (fgets(line, sizeof(line), src)) {
+        printf("%s", line);
+        printed += 1;
+        if (printed == 10) {
+            break;
+        }
+    }
 
+    fclose(src);
 }
 
 void lksh_history_write(char *input) {
-    // get line number to write to
-    FILE *stop_line_file = fopen(STOP, "r");
-    int replace_line_num;
-    fscanf(stop_line_file, "%d", &replace_line_num);
-    fclose(stop_line_file);
-    
-    // get file stats
-    struct stat sb;
-    stat(HIST, &sb);
 
     // open files
     FILE *src = fopen(HIST, "r");
     FILE *new = fopen(BUFFER, "w+");
-    
-    // copy paste from old to new file to replace a single line
+
+    // add most recent to new_file
+    fprintf(new, "%s", input);
+
+    // read current history file and write to new file
     char line[MAX_LENGTH];
-    int line_num = 1;
+    int lines_copied = 0;
     while (fgets(line, sizeof(line), src)) {
-        if (line_num != replace_line_num) {
-            fprintf(new, "%s", line);
-        } else {
-            fprintf(new, "%s", input); // line replaced
+        fprintf(new, "%s", line);
+        lines_copied += 1;
+
+        if (lines_copied == 19) {
+            break;
         }
-        line_num += 1;
-    }
-
-    // for the first time history.txt is filled
-    if (replace_line_num == -1) {
-        fprintf(new, "%s", input);
-    }
-
-    // reset history pointer
-    if (line_num == 20) {
-        stop_line_file = fopen(STOP, "w");
-        fprintf(stop_line_file, "1");
-        fclose(stop_line_file);
-    };
-
-    // increment replace line
-    if (replace_line_num != -1) {
-        stop_line_file = fopen(STOP, "w");
-        if (replace_line_num == 20) {
-            fprintf(stop_line_file, "1");
-        } else {
-            fprintf(stop_line_file, "%d", replace_line_num + 1);
-        }
-        fclose(stop_line_file);
     }
 
     fclose(src);
