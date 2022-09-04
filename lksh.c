@@ -104,12 +104,6 @@ int main() {
                     break;
                 }
             }
-            
-            // if not valid
-            // if (!valid) {
-            //     printf("%s is not a valid command\n", splits[0]);
-            //     continue;
-            // }
 
             // execute commands
             if (strcmp(splits[0], "pwd") == 0) {
@@ -132,16 +126,16 @@ int main() {
 
             } else {
 
-                // create execvp argument array
-                char *execvp_arr[split_count];
-                for (int ii = 0; ii < split_count - 1; ii++) {
-                    execvp_arr[ii] = splits[ii + 1];
+                // execute
+                int exe_pid = fork();
+                if (!exe_pid) {
+                    if (execvp(splits[0], splits) == -1) {
+                        printf("lksh: command not found: %s\n", splits[0]);
+                    }
                 }
-                execvp_arr[split_count - 1] = NULL;
-                
-                if (!fork()) {
-                    execvp(splits[0], execvp_arr);
-                } else {}
+
+                // wait for execvp to end
+                waitpid(exe_pid, NULL, 0);
             }
         }
     }
