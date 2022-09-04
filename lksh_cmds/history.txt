@@ -1,3 +1,4 @@
+cd -
 pinfo
 pinfo 5576
 pinfo 2879
@@ -17,4 +18,3 @@ pinfo
 piiiiiiiiiiiinfo
 pinfo 25
 pinfo 11
-pinfo

@@ -16,13 +16,13 @@ void lksh_pinfo(char *splits[MAX_LENGTH], int split_count) {
     sprintf(stat_file_path, "/proc/%d", pid);
     
     // check if process exists 
-    DIR *proc_dir = opendir(stat_file_path);
-    if (ENOENT == errno) {
+    struct stat sts;
+    if (stat(stat_file_path, &sts) == -1 && errno == ENOENT) {
         printf("Process with PID %d not found\n", pid);
         return;
     }
 
-    sprintf(stat_file_path, "/stat");
+    strcat(stat_file_path, "/stat");
     printf("pid: %d\n", pid);
     
     // get process state
