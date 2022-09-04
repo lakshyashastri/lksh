@@ -31,7 +31,7 @@ void lksh_pinfo(char *splits[MAX_LENGTH], int split_count) {
 
     char plus = ' ';
     if (atoi(five) == atoi(eight)) {
-        char plus = '+';
+        plus = '+';
     }
     printf("process status: %c%c\n", state, plus);
 
