@@ -20,11 +20,12 @@ void lksh_pinfo(char *splits[MAX_LENGTH], int split_count) {
     // get process state
     FILE *stat_file = fopen(stat_file_path, "r");
     char state;
-    fscanf(stat_file, "%*s %*[^)]) %c", &state);
+    char trash[MAX_LENGTH];
+    fscanf(stat_file, "%s %s %c", trash, trash, &state);
 
     // background foreground
     fseek(stat_file, 0, SEEK_SET);
-    char trash[MAX_LENGTH], five[MAX_LENGTH], eight[MAX_LENGTH];
+    char five[MAX_LENGTH], eight[MAX_LENGTH];
     fscanf(stat_file, "%s %s %s %s %s %s %s %s",
     trash, trash, trash, trash, five, trash, trash, eight);
 
