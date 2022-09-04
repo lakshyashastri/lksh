@@ -1,15 +1,12 @@
-cd includes
-cd includes
 history
-echo echo
-echo echo echo
-echo echo
+cd ..
+cd includes
+ls
+history
+echo so
+echo no
+history
+ls ..
+history
 echo test
 echo ok
-history
-ls
-cd ..
-ls
-cd includes
-ls ..
-ls

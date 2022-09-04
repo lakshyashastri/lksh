@@ -1,29 +1,46 @@
+#include "../lksh.h"
+
 #include "../includes/libs.h"
 #include "../includes/consts.h"
 
 // assumes that history.txt will always exist
 
-#define HIST "lksh_cmds/history.txt"
-#define BUFFER "lksh_cmds/hist_buffer.txt"
+// #define HIST "lksh_cmds/history.txt"
+// #define BUFFER "lksh_cmds/hist_buffer.txt"
 
 void lksh_history(char *splits[MAX_LENGTH], int split_count) {
-    FILE *src = fopen(HIST, "r");
+    char HIST[MAX_LENGTH];
+    sprintf(HIST, "%s/%s", ROOT, "lksh_cmds/history.txt");
     
-    int printed = 0;
+    FILE *src = fopen(HIST, "r");
+    char *hist[MAX_LENGTH];
+    int hist_count = 0;
+    
     char line[MAX_LENGTH];
     while (fgets(line, sizeof(line), src)) {
-        printf("%s", line);
+        // printf("%s", line);
+        hist[hist_count] = malloc(sizeof(char) * (strlen(line) + 1));
+        strcpy(hist[hist_count++], line);
         
-        printed += 1;
-        if (printed == 10) {
+        if (hist_count == 10) {
             break;
         }
+    }
+
+    // print in reverse order
+    for (int i = hist_count - 1; i >= 0; i--) {
+        printf("%s", hist[i]);
     }
 
     fclose(src);
 }
 
 void lksh_history_write(char *input) {
+    char HIST[MAX_LENGTH];
+    sprintf(HIST, "%s/%s", ROOT, "lksh_cmds/history.txt");
+    
+    char BUFFER[MAX_LENGTH];
+    sprintf(BUFFER, "%s/%s", ROOT, "lksh_cmds/hist_buffer.txt");
 
     // open files
     FILE *src = fopen(HIST, "r");
