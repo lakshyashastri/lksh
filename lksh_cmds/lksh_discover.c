@@ -16,31 +16,46 @@ int flag_is_valid_discover(char *flag) {
 
 void discover(char *dir_path, char *items[MAX_LENGTH], int item_types[MAX_LENGTH], int *counter) {
     DIR *dir = opendir(dir_path);
+    if (!dir) {
+        return;
+    }
+
     struct dirent *item;
     char relative[MAX_LENGTH];
-
     while ((item = readdir(dir)) != NULL) {
+        // ignore hidden folders as well as pointers to the folder itself and the prev folder
+        if ((item -> d_name)[0] == '.') {
+            continue;
+        }
+        
         // add item to item array
         items[*counter] = malloc(sizeof(char) * (strlen(item -> d_name) + 1));
         strcpy(items[*counter], item -> d_name);
 
+        strcat(relative, dir_path);
+        strcat(relative, "/");
+        strcat(relative, item -> d_name);
+
+        printf("%s\n", relative);
+
         // store item type
         struct stat item_info;
-        if (stat(item -> d_name, &item_info) == 0 && item_info.st_mode & S_IFDIR) {
+        if (stat(relative, &item_info) == 0 && item_info.st_mode & S_IFDIR) {
             item_types[(*counter)++] = 0;
 
-            // ignore hidden folders as well as pointers to the folder itself and the prev folder
-            if ((item -> d_name)[0] != '.') {
-                strcat(relative, dir_path);
-                strcat(relative, "/");
-                strcat(relative, item -> d_name);
-
-                discover(item -> d_name, items, item_types, counter);
-            }
-        } else {
+        } else if (item_info.st_mode & S_IFREG) {
             item_types[(*counter)++] = 1;
+
+        } else {
+            item_types[(*counter)++] = -1;
         }
+
+        // printf("%s\n", relative);
+        discover(relative, items, item_types, counter);
+        memset(relative, 0, MAX_LENGTH);
     }
+    
+    closedir(dir);
 }
 
 void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
@@ -82,9 +97,15 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
         }
     }
 
+    // initialise vars
     char *items[MAX_LENGTH];
     int item_types[MAX_LENGTH]; // dir = 0; file = 1
     int item_type_counter = 0;
+
+    // fill in .
+    items[item_type_counter] = malloc(sizeof(char) * (strlen(".") + 1));
+    item_types[item_type_counter] = 0;
+    strcpy(items[item_type_counter++], ".");
 
     discover(path, items, item_types, &item_type_counter);
 

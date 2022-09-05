@@ -1,20 +1,20 @@
 discover
-ls
-pwd
-cd Library
-ls
-pwd
-cd ..
-pwd
-ls
-cd /
-vim
-cd includes
-vim
-[A
-vim
-discover
-disco
-discover
 discovr
 discover
+discove
+discover
+ls ok.txt
+ls test2
+ls
+ls ..
+cd test
+cd ..
+ls
+cd test
+ls -l
+cd lksh_cmds
+discover
+di
+discover
+quit
+ls -l

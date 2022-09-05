@@ -33,4 +33,4 @@
   - ls ~/includes handle: handle ~ everywhere by replacing it with ROOT in string using [this](https://stackoverflow.com/questions/32496497/standard-function-to-replace-character-or-substring-in-a-char-array)
   - **ls colour coding not working when ls'ing outside current dir (down)**
   - `ls -al ..` vs `ls -a -l ..`
-  - `ls -l` wiggly
+  - `ls -l` wiggly: probably because hard links
