@@ -14,33 +14,33 @@ int flag_is_valid_discover(char *flag) {
     return 0;
 }
 
-int discover(char *dir_path, char *items[MAX_LENGTH], int item_types[MAX_LENGTH], int counter, char relative[MAX_LENGTH]) {
-    DIR *dir = opendir(relative);
-
+void discover(char *dir_path, char *items[MAX_LENGTH], int item_types[MAX_LENGTH], int *counter) {
+    DIR *dir = opendir(dir_path);
     struct dirent *item;
+    char relative[MAX_LENGTH];
+
     while ((item = readdir(dir)) != NULL) {
         // add item to item array
-        items[counter] = malloc(sizeof(char) * (strlen(item -> d_name) + 1));
-        strcpy(items[counter], item -> d_name);
+        items[*counter] = malloc(sizeof(char) * (strlen(item -> d_name) + 1));
+        strcpy(items[*counter], item -> d_name);
 
         // store item type
         struct stat item_info;
         if (stat(item -> d_name, &item_info) == 0 && item_info.st_mode & S_IFDIR) {
-            item_types[counter++] = 0;
+            item_types[(*counter)++] = 0;
 
             // ignore hidden folders as well as pointers to the folder itself and the prev folder
             if ((item -> d_name)[0] != '.') {
+                strcat(relative, dir_path);
                 strcat(relative, "/");
                 strcat(relative, item -> d_name);
-                printf("%s\n", relative);
-                discover(item -> d_name, items, item_types, counter, relative);
+
+                discover(item -> d_name, items, item_types, counter);
             }
         } else {
-            item_types[counter++] = 1;
+            item_types[(*counter)++] = 1;
         }
     }
-
-    return counter;
 }
 
 void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
@@ -85,11 +85,10 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
     char *items[MAX_LENGTH];
     int item_types[MAX_LENGTH]; // dir = 0; file = 1
     int item_type_counter = 0;
-    char relative[MAX_LENGTH];
-    strcpy(relative, path);
 
-    int num = discover(path, items, item_types, item_type_counter, relative);
-    for (int i = 0; i < num; i++) {
+    discover(path, items, item_types, &item_type_counter);
+
+    for (int i = 0; i < item_type_counter; i++) {
         printf("%s: %d\n", items[i], item_types[i]);
     }
 

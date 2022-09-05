@@ -1,20 +1,20 @@
 discover
+ls
+pwd
+cd Library
+ls
+pwd
+cd ..
+pwd
+ls
+cd /
+vim
+cd includes
+vim
+[A
+vim
+discover
 disco
 discover
 discovr
-discover
-discove
-discover
-
-[Adiscover
-discover
-discover ~ -d "ok"
-discover -d -f
-discovr -d -f
-discover -d -f "ok"
-discover /path/~ -d "ok"
-discover /path/~ -f "ok"
-discover "osn"
-discover -d
-discover -f
 discover
