@@ -27,16 +27,14 @@ void discover(char *dir_path, char *items[MAX_LENGTH], int item_types[MAX_LENGTH
         if ((item -> d_name)[0] == '.') {
             continue;
         }
-        
-        // add item to item array
-        items[*counter] = malloc(sizeof(char) * (strlen(item -> d_name) + 1));
-        strcpy(items[*counter], item -> d_name);
 
         strcat(relative, dir_path);
         strcat(relative, "/");
         strcat(relative, item -> d_name);
 
-        printf("%s\n", relative);
+        // add item to item array
+        items[*counter] = malloc(sizeof(char) * (strlen(relative) + 1));
+        strcpy(items[*counter], relative);
 
         // store item type
         struct stat item_info;
@@ -103,20 +101,35 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
     int item_type_counter = 0;
 
     // fill in .
-    items[item_type_counter] = malloc(sizeof(char) * (strlen(".") + 1));
+    // if (strcmp(path, ".") == 0) {
+    items[item_type_counter] = malloc(sizeof(char) * (strlen(path) + 1));
     item_types[item_type_counter] = 0;
-    strcpy(items[item_type_counter++], ".");
+    strcpy(items[item_type_counter++], path);
+    // }
 
     discover(path, items, item_types, &item_type_counter);
 
-    for (int i = 0; i < item_type_counter; i++) {
-        printf("%s: %d\n", items[i], item_types[i]);
-    }
+    if (file != NULL) {
 
-    // simply discover or discover -d -f
-    // if (split_count == 1 || (flags[0] && flags[1])) {
-    //     return;
-    // }
+    } else {
+
+        // simply discover or discover -d -f
+        for (int i = 0; i < item_type_counter; i++) {
+            if (split_count == 1 || (flags[0] && flags[1]) || split_count > 1 && path != NULL) {
+                printf("%s\n", items[i]);
+
+            } else if (flags[0]) {
+                if (!item_types[i]) {
+                    printf("%s\n", items[i]);
+                }
+
+            } else if (flags[1]) {
+                if (item_types[i]) {
+                    printf("%s\n", items[i]);
+                }
+            }
+        }
+    }
 
     // printf("%s\n", path == NULL ? "no path" : path);
     // printf("%s %s\n", flags[0] ? "-d" : "no d", flags[1] ? "-f" : "no f");

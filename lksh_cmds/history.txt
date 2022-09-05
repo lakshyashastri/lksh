@@ -1,20 +1,20 @@
+discover -d
+discover -f
 discover
-discovr
-discover
-discove
-discover
-ls ok.txt
-ls test2
 ls
-ls ..
 cd test
+ls
 cd ..
 ls
+sl
+lx
+ls
 cd test
-ls -l
-cd lksh_cmds
-discover
-di
-discover
-quit
-ls -l
+cd testls
+ls
+discover -d
+discover test -d
+discover test -f
+discover -f
+discover test/OSN
+discover test

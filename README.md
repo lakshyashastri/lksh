@@ -28,9 +28,11 @@
 - `cmd ` doesn't work: **MAJOR PROBLEM: NOT HANDLING TABS AND SPACES**
 # ls
   - child dir total block size not working; also colouring
-  - ls file
+  - **ls file**
   - ls invalid option remove the - from the flag
   - ls ~/includes handle: handle ~ everywhere by replacing it with ROOT in string using [this](https://stackoverflow.com/questions/32496497/standard-function-to-replace-character-or-substring-in-a-char-array)
   - **ls colour coding not working when ls'ing outside current dir (down)**
   - `ls -al ..` vs `ls -a -l ..`
   - `ls -l` wiggly: probably because hard links
+
+- handle guidelines
