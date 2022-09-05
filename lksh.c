@@ -9,6 +9,7 @@
 #include "lksh_cmds/lksh_ls.c"
 #include "lksh_cmds/lksh_history.c"
 #include "lksh_cmds/lksh_pinfo.c"
+#include "lksh_cmds/lksh_discover.c"
 
 // initial working directory ie root
 char ROOT[MAX_LENGTH];
@@ -28,8 +29,8 @@ int main() {
     cls();
 
     // list of valid commands
-    int NUM_CMDS = 6;
-    char *CMDS[6] = {"pwd", "echo", "cd", "ls", "history", "pinfo"};
+    int NUM_CMDS = 7;
+    char *CMDS[7] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "target"};
 
     // get username
     struct passwd *username;
@@ -133,6 +134,9 @@ int main() {
             
             } else if (strcmp(splits[0], "pinfo") == 0) {
                 lksh_pinfo(splits, split_count);
+            
+            } else if (strcmp(splits[0], "discover") == 0) {
+                lksh_discover(splits, split_count);
 
             } else {
 

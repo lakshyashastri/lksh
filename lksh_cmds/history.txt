@@ -1,20 +1,20 @@
-sleep 0.6
-ls
-
-clear
-sleep 1
-sleep 0.6
-sleep 0.4
-sleep 0.5
-sleep 0.6
-ls
-sleep 0.8
-sleep 1
-sleep 2
-ls
-sleep 2
-ls
-sleep 0.5
-
-ls
-
+discover pat -d
+discover pat -f
+discover pat -d -f
+discover .
+discover -d -f
+discover -f
+discover -d
+discover
+discover -f -d
+discover -f
+discover -d
+discover no
+discover
+discover -f -d
+discover niggaaaaaa
+discover -f
+discover ok
+discover
+discover ok
+discover
