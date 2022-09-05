@@ -14,19 +14,40 @@ int flag_is_valid_discover(char *flag) {
     return 0;
 }
 
-void discover(char *path, char items[MAX_LENGTH]) {
+int discover(char *dir_path, char *items[MAX_LENGTH], int item_types[MAX_LENGTH], int counter, char relative[MAX_LENGTH]) {
+    DIR *dir = opendir(relative);
 
+    struct dirent *item;
+    while ((item = readdir(dir)) != NULL) {
+        // add item to item array
+        items[counter] = malloc(sizeof(char) * (strlen(item -> d_name) + 1));
+        strcpy(items[counter], item -> d_name);
+
+        // store item type
+        struct stat item_info;
+        if (stat(item -> d_name, &item_info) == 0 && item_info.st_mode & S_IFDIR) {
+            item_types[counter++] = 0;
+
+            // ignore hidden folders as well as pointers to the folder itself and the prev folder
+            if ((item -> d_name)[0] != '.') {
+                strcat(relative, "/");
+                strcat(relative, item -> d_name);
+                printf("%s\n", relative);
+                discover(item -> d_name, items, item_types, counter, relative);
+            }
+        } else {
+            item_types[counter++] = 1;
+        }
+    }
+
+    return counter;
 }
 
 void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
-    // simply discover
-    if (split_count == 1) {
-        return;
-    }
 
     // handle params
     int flags[2] = {0}; // -d -f
-    char *path = NULL, *file = NULL;
+    char *path = ".", *file = NULL;
     for (int i = 1; i < split_count; i++) {
         
         // handle flags
@@ -40,6 +61,7 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
                 return;
             }
 
+        // handle files
         } else if (splits[i][0] == '"') {
             file = malloc(sizeof(char) * (strlen(splits[i]) + 1));
             strcpy(file, splits[i]);
@@ -48,6 +70,7 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
             file += 1;
             file[strlen(file)-1] = '\0';
 
+        // handle path
         } else {
             path = malloc(sizeof(char) * (strlen(splits[i]) + 1));
             strcpy(path, splits[i]);
@@ -58,6 +81,22 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
             }
         }
     }
+
+    char *items[MAX_LENGTH];
+    int item_types[MAX_LENGTH]; // dir = 0; file = 1
+    int item_type_counter = 0;
+    char relative[MAX_LENGTH];
+    strcpy(relative, path);
+
+    int num = discover(path, items, item_types, item_type_counter, relative);
+    for (int i = 0; i < num; i++) {
+        printf("%s: %d\n", items[i], item_types[i]);
+    }
+
+    // simply discover or discover -d -f
+    // if (split_count == 1 || (flags[0] && flags[1])) {
+    //     return;
+    // }
 
     // printf("%s\n", path == NULL ? "no path" : path);
     // printf("%s %s\n", flags[0] ? "-d" : "no d", flags[1] ? "-f" : "no f");

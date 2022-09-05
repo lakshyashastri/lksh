@@ -1,3 +1,13 @@
+discover
+disco
+discover
+discovr
+discover
+discove
+discover
+
+[Adiscover
+discover
 discover ~ -d "ok"
 discover -d -f
 discovr -d -f
@@ -8,13 +18,3 @@ discover "osn"
 discover -d
 discover -f
 discover
-discover some/path -f "a.txt"
-discover some/path
-discover .
-discover
-discover pat -d
-discover pat -f
-discover pat -d -f
-discover .
-discover -d -f
-discover -f

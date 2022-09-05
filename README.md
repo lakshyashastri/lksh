@@ -21,6 +21,8 @@
 - time
   - fix sleep 0.5
 
+- took n seconds sep colour
+
 - dont include .c files
 - make mem allocs dynamic everywhere
 - `cmd ` doesn't work: **MAJOR PROBLEM: NOT HANDLING TABS AND SPACES**
