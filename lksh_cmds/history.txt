@@ -1,3 +1,4 @@
+discover ~ -d "ok"
 discover -d -f
 discovr -d -f
 discover -d -f "ok"
@@ -17,4 +18,3 @@ discover pat -d -f
 discover .
 discover -d -f
 discover -f
-discover -d

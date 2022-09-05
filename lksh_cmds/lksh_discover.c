@@ -1,3 +1,5 @@
+#include "../lksh.h"
+
 #include "../includes/libs.h"
 #include "../includes/consts.h"
 
@@ -49,6 +51,11 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
         } else {
             path = malloc(sizeof(char) * (strlen(splits[i]) + 1));
             strcpy(path, splits[i]);
+
+            if (strcmp(path, "~") == 0) {
+                path = malloc(sizeof(char) * (strlen(ROOT) + 1));
+                strcpy(path, ROOT);
+            }
         }
     }
 
