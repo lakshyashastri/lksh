@@ -115,7 +115,7 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
 
         // simply discover or discover -d -f
         for (int i = 0; i < item_type_counter; i++) {
-            if (split_count == 1 || (flags[0] && flags[1]) || split_count > 1 && path != NULL) {
+            if (split_count == 1 || (flags[0] && flags[1])) {
                 printf("%s\n", items[i]);
 
             } else if (flags[0]) {

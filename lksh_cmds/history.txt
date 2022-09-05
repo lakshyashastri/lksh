@@ -1,3 +1,11 @@
+discover -f
+discover -d
+discover
+cd test
+discover -f
+discover
+cd test
+discover
 discover -d
 discover -f
 discover
@@ -10,11 +18,3 @@ sl
 lx
 ls
 cd test
-cd testls
-ls
-discover -d
-discover test -d
-discover test -f
-discover -f
-discover test/OSN
-discover test
