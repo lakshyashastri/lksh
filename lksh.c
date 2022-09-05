@@ -19,6 +19,10 @@ char CWD[MAX_LENGTH] = "~";
 // variable to keep track of previous working directory (absolute from actual root)
 char PREV_WD[MAX_LENGTH] = "~";
 
+// time taken by foreground processes
+long long int TIME_TAKEN = 0;
+char TIME_TAKEN_STRING[MAX_LENGTH];
+
 int main() {
     // clear terminal screen at initialization
     cls();
@@ -54,8 +58,14 @@ int main() {
         }
 
         // shell prompt
-        printf("%s<%s%s@%s%s:%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, COLOR_RESET);
+        printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
+
+        // clear time string
+        memset(TIME_TAKEN_STRING, 0, sizeof(TIME_TAKEN));
+
+        // log start time
+        time_t start_time = time(NULL);
 
         // call this only when input is not empty
         lksh_history_write(input);
@@ -136,6 +146,16 @@ int main() {
 
                 // wait for execvp to end
                 waitpid(exe_pid, NULL, 0);
+            }
+
+            // end time
+            time_t end_time = time(NULL);
+
+            // display time
+            TIME_TAKEN = end_time - start_time;
+            if (TIME_TAKEN >= 1) {
+                // TIME_TAKEN = round(TIME_TAKEN);
+                sprintf(TIME_TAKEN_STRING, "took %llds", TIME_TAKEN);
             }
         }
     }

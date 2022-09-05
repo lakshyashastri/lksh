@@ -18,6 +18,10 @@
 - flag handling should be more modular for future flags
 - cd .. from ~: behaviour for path display in shell
 
+- time
+  - fix sleep 0.5
+
+- dont include .c files
 - make mem allocs dynamic everywhere
 - `cmd ` doesn't work
 # ls
