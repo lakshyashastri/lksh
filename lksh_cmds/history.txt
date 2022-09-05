@@ -1,3 +1,16 @@
+discover -d -f
+discovr -d -f
+discover -d -f "ok"
+discover /path/~ -d "ok"
+discover /path/~ -f "ok"
+discover "osn"
+discover -d
+discover -f
+discover
+discover some/path -f "a.txt"
+discover some/path
+discover .
+discover
 discover pat -d
 discover pat -f
 discover pat -d -f
@@ -5,16 +18,3 @@ discover .
 discover -d -f
 discover -f
 discover -d
-discover
-discover -f -d
-discover -f
-discover -d
-discover no
-discover
-discover -f -d
-discover niggaaaaaa
-discover -f
-discover ok
-discover
-discover ok
-discover

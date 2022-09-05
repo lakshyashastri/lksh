@@ -23,7 +23,7 @@
 
 - dont include .c files
 - make mem allocs dynamic everywhere
-- `cmd ` doesn't work
+- `cmd ` doesn't work: **MAJOR PROBLEM: NOT HANDLING TABS AND SPACES**
 # ls
   - child dir total block size not working; also colouring
   - ls file
