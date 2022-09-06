@@ -76,7 +76,7 @@ int main() {
         char *cmds;
         cmds = strtok(input, semi);
 
-        // convert input to input.split(';')
+        // convert input to input.split(';') array
         char *input_splitted[MAX_LENGTH];
         int input_split_count = 0;
         while (cmds != NULL) {
@@ -85,6 +85,9 @@ int main() {
         }
 
         for (int ii = 0; ii < input_split_count; ii++) {
+
+            char input_copy[MAX_LENGTH];
+            strcpy(input_copy, input_splitted[ii]);
 
             // parse input for spaces and tabs
             char *sep = " \t";
@@ -108,58 +111,93 @@ int main() {
             }
 
             // check if command is valid
-            int valid = 0;
-            for (int i = 0; i < NUM_CMDS; i++) {
-                if (strcmp(splits[0], CMDS[i]) == 0) {
-                    valid = 1;
-                    break;
+            // int valid = 0;
+            // for (int i = 0; i < NUM_CMDS; i++) {
+            //     if (strcmp(splits[0], CMDS[i]) == 0) {
+            //         valid = 1;
+            //         break;
+            //     }
+            // }
+
+            // get bg processes
+            char *and_sepped[MAX_LENGTH];
+            int and_sep_count = 0;
+            char *and_sep = "&";
+
+            // get number of &s in string
+            int num_ands = 0;
+            for (int i = 0; i <= strlen(input_copy); i++) {
+                if (input_copy[i] == '&') {
+                    num_ands += 1;
                 }
             }
 
-            // execute commands
-            if (strcmp(splits[0], "pwd") == 0) {
-                lksh_pwd();
+            token = strtok(input_copy, and_sep);
+            while (token != NULL) {
+                and_sepped[and_sep_count++] = token;
+                token = strtok(NULL, and_sep);
+            }
+            if (strcmp(and_sepped[and_sep_count - 1], "\n") == 0) {
+                and_sep_count -= 1;
+            }
 
-            } else if (strcmp(splits[0], "echo") == 0) {
-                lksh_echo(splits, split_count);
+            // printf("%d %d %s\n", and_sep_count, num_ands, and_sepped[0]);
 
-            } else if (strcmp(splits[0], "cd") == 0) {
-                lksh_cd(splits, split_count);
+            printf("%d %d\n", and_sep_count, num_ands);
 
-            } else if (strcmp(splits[0], "ls") == 0) {
-                lksh_ls(splits, split_count);
-
-            } else if (strcmp(splits[0], "history") == 0) {
-                lksh_history(splits, split_count);
+            // bg execute
+            for (int i = 0; i < and_sep_count; i++) {
+                printf("%d: '%s'\n", i, and_sepped[i]);
+            }
             
-            } else if (strcmp(splits[0], "pinfo") == 0) {
-                lksh_pinfo(splits, split_count);
-            
-            } else if (strcmp(splits[0], "discover") == 0) {
-                lksh_discover(splits, split_count);
+            // fg execute
+            if (and_sep_count - num_ands == 1) {
 
-            } else {
+                // fg execute
+                if (strcmp(and_sepped[and_sep_count - 1], "pwd") == 0) {
+                    lksh_pwd();
 
-                // execute
-                int exe_pid = fork();
-                if (!exe_pid) {
-                    if (execvp(splits[0], splits) == -1) {
-                        printf("lksh: command not found: %s\n", splits[0]);
+                } else if (strcmp(and_sepped[and_sep_count - 1], "echo") == 0) {
+                    lksh_echo(splits, split_count);
+
+                } else if (strcmp(and_sepped[and_sep_count - 1], "cd") == 0) {
+                    lksh_cd(splits, split_count);
+
+                } else if (strcmp(and_sepped[and_sep_count - 1], "ls") == 0) {
+                    lksh_ls(splits, split_count);
+
+                } else if (strcmp(and_sepped[and_sep_count - 1], "history") == 0) {
+                    lksh_history(splits, split_count);
+                
+                } else if (strcmp(and_sepped[and_sep_count - 1], "pinfo") == 0) {
+                    lksh_pinfo(splits, split_count);
+                
+                } else if (strcmp(and_sepped[and_sep_count - 1], "discover") == 0) {
+                    lksh_discover(splits, split_count);
+
+                } else {
+
+                    // execute
+                    int exe_pid = fork();
+                    if (!exe_pid) {
+                        if (execvp(and_sepped[and_sep_count - 1], splits) == -1) {
+                            printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
+                        }
                     }
+
+                    // wait for execvp to end
+                    waitpid(exe_pid, NULL, 0);
                 }
 
-                // wait for execvp to end
-                waitpid(exe_pid, NULL, 0);
-            }
+                // end time
+                time_t end_time = time(NULL);
 
-            // end time
-            time_t end_time = time(NULL);
-
-            // display time
-            TIME_TAKEN = end_time - start_time;
-            if (TIME_TAKEN >= 1) {
-                // TIME_TAKEN = round(TIME_TAKEN);
-                sprintf(TIME_TAKEN_STRING, "took %llds", TIME_TAKEN);
+                // display time
+                TIME_TAKEN = end_time - start_time;
+                if (TIME_TAKEN >= 1) {
+                    // TIME_TAKEN = round(TIME_TAKEN);
+                    sprintf(TIME_TAKEN_STRING, "took %llds", TIME_TAKEN);
+                }
             }
         }
     }

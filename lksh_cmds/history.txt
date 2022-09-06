@@ -1,20 +1,20 @@
-discover "osn.txt"
-discover test/OSN
-discover test "OSN"
-discover test "a.txt"
-discover test "DSA/a.txt"
-discover test
-discover test "DSA"
-discover test DSA
-discover test "DSA"
-discover "DSA"
-discover test -f "b.txt"
-discover test -f
-discover test -d
-discover test -f
-discover test
-discover test -d
-discover test -f
-discover test
-discover test -d
-discover test -f
+quit
+sleep 1& sleep 2
+sleep 1& sleep 1
+sleep 1&
+pwd
+sleep 1& sleep 2 & sleep 3
+sleep 1& sleep 2&
+sleep 1& sleep 1
+sleep 1& sleep 2
+sleep 1& sleep 2&
+sleep 1&
+sleep 1
+sleep 1& sleep 2 &
+sleep 1& sleep 2
+sleep 1&
+sleep 1 & sleep 2& sleep 3 &sleep4
+sleep 1& sleep 2&
+sleep 1&
+sleep 1& sleep 2&
+sleep 1& sleep 2

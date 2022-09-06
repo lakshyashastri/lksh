@@ -19,7 +19,7 @@
 - cd .. from ~: behaviour for path display in shell
 
 - time
-  - fix sleep 0.5
+  - fix sleep 0.5: kapil has decimal time
 
 - took n seconds sep colour
 
@@ -33,7 +33,7 @@
   - ls ~/includes handle: handle ~ everywhere by replacing it with ROOT in string using [this](https://stackoverflow.com/questions/32496497/standard-function-to-replace-character-or-substring-in-a-char-array)
   - **ls colour coding not working when ls'ing outside current dir (down)**
   - `ls -al ..` vs `ls -a -l ..`
-  - `ls -l` wiggly: probably because hard links
+  - `ls -l` wiggly: because hard links: right align that as well
   - colour `ls -l` output
 
 - handle guidelines
