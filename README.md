@@ -34,6 +34,7 @@
   - **ls colour coding not working when ls'ing outside current dir (down)**
   - `ls -al ..` vs `ls -a -l ..`
   - `ls -l` wiggly: probably because hard links
+  - colour `ls -l` output
 
 - handle guidelines
 - PERFECT SHIT: HANDLE ALL COMMAND ERRORS: **PERROR**

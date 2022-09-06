@@ -1,3 +1,13 @@
+discover "osn.txt"
+discover test/OSN
+discover test "OSN"
+discover test "a.txt"
+discover test "DSA/a.txt"
+discover test
+discover test "DSA"
+discover test DSA
+discover test "DSA"
+discover "DSA"
 discover test -f "b.txt"
 discover test -f
 discover test -d
@@ -8,13 +18,3 @@ discover test -f
 discover test
 discover test -d
 discover test -f
-discover test -f -d
-ls
-cd
-cd 
-cd test
-discover test
-discover test -f
-discover test
-discover
-discover test

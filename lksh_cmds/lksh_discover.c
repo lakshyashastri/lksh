@@ -108,8 +108,13 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
     discover(path, items, item_types, &item_type_counter);
 
     for (int i = 0; i < item_type_counter; i++) {
-        if (file != NULL && strstr(items[i], file) == NULL) {
-            continue;
+        
+        // check for file
+        if (file != NULL) {
+            char *cmp = &items[i][strlen(items[i]) - strlen(file)];
+            if (strcmp(cmp, file) != 0) {
+                continue;
+            }
         }
 
         // simply discover or discover -d -f
