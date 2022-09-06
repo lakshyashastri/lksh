@@ -150,9 +150,17 @@ int main() {
             // printf("%d %d\n", and_sep_count, num_ands);
 
             // bg execute
-            // for (int i = 0; i < and_sep_count; i++) {
-            //     printf("%d: '%s'\n", i, and_sepped[i]);
-            // }
+            for (int i = 0; i < num_ands; i++) {
+                // split into args list
+                char *tok;
+                tok = strtok(and_sepped[and_sep_count - 1], sep);
+                char *args_arr[MAX_LENGTH];
+                int args_c = 0;
+                while (tok != NULL) {
+                    args_arr[args_c++] = tok;
+                    tok = strtok(NULL, sep);
+                }
+            }
             
             // fg execute
             if (and_sep_count - num_ands == 1 && strlen(and_sepped[and_sep_count - 1]) != 0) {
