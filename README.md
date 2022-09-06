@@ -36,3 +36,4 @@
   - `ls -l` wiggly: probably because hard links
 
 - handle guidelines
+- PERFECT SHIT: HANDLE ALL COMMAND ERRORS: **PERROR**

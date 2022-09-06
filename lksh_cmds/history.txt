@@ -1,20 +1,20 @@
-discover -f
-discover -d
+discover test -d
+discover test -f
+discover test
+discover test -d
+discover test -f
+discover test -f -d
+ls
+cd
+cd 
+cd test
+discover test
+discover test -f
+discover test
+discover
+discover test
+cd test
 discover
 cd test
-discover -f
-discover
-cd test
-discover
-discover -d
-discover -f
-discover
+cd tes
 ls
-cd test
-ls
-cd ..
-ls
-sl
-lx
-ls
-cd test

@@ -111,10 +111,11 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
 
     if (file != NULL) {
 
+
     } else {
 
-        // simply discover or discover -d -f
         for (int i = 0; i < item_type_counter; i++) {
+            // simply discover or discover -d -f
             if (split_count == 1 || (flags[0] && flags[1])) {
                 printf("%s\n", items[i]);
 
@@ -127,6 +128,10 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
                 if (item_types[i]) {
                     printf("%s\n", items[i]);
                 }
+
+            // discover <path>
+            } else if (path != NULL && !flags[0] && !flags[1]) {
+                printf("%s\n", items[i]);
             }
         }
     }
