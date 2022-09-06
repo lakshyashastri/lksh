@@ -119,11 +119,6 @@ int main() {
             //     }
             // }
 
-            // get bg processes
-            char *and_sepped[MAX_LENGTH];
-            int and_sep_count = 0;
-            char *and_sep = "&";
-
             // get number of &s in string
             int num_ands = 0;
             for (int i = 0; i <= strlen(input_copy); i++) {
@@ -132,55 +127,74 @@ int main() {
                 }
             }
 
+            // get &-separated string
+            char *and_sepped[MAX_LENGTH];
+            int and_sep_count = 0;
+            char *and_sep = "&";
             token = strtok(input_copy, and_sep);
             while (token != NULL) {
                 and_sepped[and_sep_count++] = token;
                 token = strtok(NULL, and_sep);
             }
-            if (strcmp(and_sepped[and_sep_count - 1], "\n") == 0) {
-                and_sep_count -= 1;
+
+            // strip ' ' and '\n'
+            for (int i = 0; i < and_sep_count; i++) {
+                if (and_sepped[i][0] == ' ' || and_sepped[i][0] == '\n') {
+                    memmove(and_sepped[i], and_sepped[i] + 1, strlen(and_sepped[i]));
+                }
+                if (and_sepped[i][strlen(and_sepped[i]) - 1] == ' ' || and_sepped[i][strlen(and_sepped[i]) - 1] == '\n') {
+                    and_sepped[i][strlen(and_sepped[i]) - 1] = '\0';
+                }
             }
 
-            // printf("%d %d %s\n", and_sep_count, num_ands, and_sepped[0]);
-
-            printf("%d %d\n", and_sep_count, num_ands);
+            // printf("%d %d\n", and_sep_count, num_ands);
 
             // bg execute
-            for (int i = 0; i < and_sep_count; i++) {
-                printf("%d: '%s'\n", i, and_sepped[i]);
-            }
+            // for (int i = 0; i < and_sep_count; i++) {
+            //     printf("%d: '%s'\n", i, and_sepped[i]);
+            // }
             
             // fg execute
-            if (and_sep_count - num_ands == 1) {
+            if (and_sep_count - num_ands == 1 && strlen(and_sepped[and_sep_count - 1]) != 0) {
+
+                // split into args list
+                char *tok;
+                tok = strtok(and_sepped[and_sep_count - 1], sep);
+                char *args_arr[MAX_LENGTH];
+                int args_c = 0;
+                while (tok != NULL) {
+                    args_arr[args_c++] = tok;
+                    tok = strtok(NULL, sep);
+                }
 
                 // fg execute
                 if (strcmp(and_sepped[and_sep_count - 1], "pwd") == 0) {
                     lksh_pwd();
 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "echo") == 0) {
-                    lksh_echo(splits, split_count);
+                    lksh_echo(args_arr, args_c);
 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "cd") == 0) {
-                    lksh_cd(splits, split_count);
+                    lksh_cd(args_arr, args_c);
 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "ls") == 0) {
-                    lksh_ls(splits, split_count);
+                    lksh_ls(args_arr, args_c);
 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "history") == 0) {
-                    lksh_history(splits, split_count);
+                    lksh_history(args_arr, args_c);
                 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "pinfo") == 0) {
-                    lksh_pinfo(splits, split_count);
+                    lksh_pinfo(args_arr, args_c);
                 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "discover") == 0) {
-                    lksh_discover(splits, split_count);
+                    lksh_discover(args_arr, args_c);
 
                 } else {
 
                     // execute
                     int exe_pid = fork();
                     if (!exe_pid) {
-                        if (execvp(and_sepped[and_sep_count - 1], splits) == -1) {
+                        if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
                         }
                     }

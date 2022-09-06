@@ -7,7 +7,7 @@ int main() {
     int and_sep_count = 0;
     char *sep = "&";
     char *token;
-    char input[] = "sleep 5& sleep 3 2 &sleep 1";
+    char input[] = "sleep 5& sleep 3 2 &sleep 1&sleep 3";
     
     token = strtok(input, sep);
 
@@ -25,8 +25,21 @@ int main() {
         }
     }
 
-    for (int i = 0; i < and_sep_count; i++) {
-        printf("'%s'\n", and_sepped[i]);
+    // for (int i = 0; i < and_sep_count; i++) {
+    //     printf("'%s'\n", and_sepped[i]);
+    // }
+
+    char *tok;
+    tok = strtok(and_sepped[and_sep_count - 1], " ");
+    char *args_arr[1024];
+    int args_c = 0;
+    while (tok != NULL) {
+        args_arr[args_c++] = tok;
+        tok = strtok(NULL, " ");
+    }
+
+    for (int i = 0; i < args_c; i++) {
+        printf("'%s' ", args_arr[i]);
     }
 
     return 0;
