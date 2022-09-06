@@ -1,3 +1,8 @@
+discover test -f "b.txt"
+discover test -f
+discover test -d
+discover test -f
+discover test
 discover test -d
 discover test -f
 discover test
@@ -13,8 +18,3 @@ discover test -f
 discover test
 discover
 discover test
-cd test
-discover
-cd test
-cd tes
-ls

@@ -101,38 +101,34 @@ void lksh_discover(char *splits[MAX_LENGTH], int split_count) {
     int item_type_counter = 0;
 
     // fill in .
-    // if (strcmp(path, ".") == 0) {
     items[item_type_counter] = malloc(sizeof(char) * (strlen(path) + 1));
     item_types[item_type_counter] = 0;
     strcpy(items[item_type_counter++], path);
-    // }
 
     discover(path, items, item_types, &item_type_counter);
 
-    if (file != NULL) {
+    for (int i = 0; i < item_type_counter; i++) {
+        if (file != NULL && strstr(items[i], file) == NULL) {
+            continue;
+        }
 
+        // simply discover or discover -d -f
+        if (split_count == 1 || (flags[0] && flags[1])) {
+            printf("%s\n", items[i]);
 
-    } else {
-
-        for (int i = 0; i < item_type_counter; i++) {
-            // simply discover or discover -d -f
-            if (split_count == 1 || (flags[0] && flags[1])) {
-                printf("%s\n", items[i]);
-
-            } else if (flags[0]) {
-                if (!item_types[i]) {
-                    printf("%s\n", items[i]);
-                }
-
-            } else if (flags[1]) {
-                if (item_types[i]) {
-                    printf("%s\n", items[i]);
-                }
-
-            // discover <path>
-            } else if (path != NULL && !flags[0] && !flags[1]) {
+        } else if (flags[0]) {
+            if (!item_types[i]) {
                 printf("%s\n", items[i]);
             }
+
+        } else if (flags[1]) {
+            if (item_types[i]) {
+                printf("%s\n", items[i]);
+            }
+
+        // discover <path>
+        } else if (path != NULL && !flags[0] && !flags[1]) {
+            printf("%s\n", items[i]);
         }
     }
 
