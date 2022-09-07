@@ -24,6 +24,36 @@ char PREV_WD[MAX_LENGTH] = "~";
 long long int TIME_TAKEN = 0;
 char TIME_TAKEN_STRING[MAX_LENGTH];
 
+// bg processes
+int bg_ids[MAX_LENGTH];
+char *bg_names[MAX_LENGTH];
+int num_bg = 0;
+
+// called when child dies before parent kills it
+void child_handler() {
+    int status;
+    int pid = waitpid(-1, &status, WNOHANG);
+
+    if (pid > 0) {
+        if (WIFSTOPPED(status)) {
+            return;
+        }
+
+        int found_index = -1;
+        for (int i = 0; i < num_bg; i++) {
+            if (bg_ids[i] == pid) {
+                found_index = i;
+            }
+        }
+
+        if (found_index >= 0) {
+            fprintf(stderr, "%s with pid = %d exited %s\n", bg_names[found_index], pid, WIFEXITED(status) ? "normally" : "abnormally");
+            fflush(stderr);
+
+        }
+    }
+}
+
 int main() {
     // clear terminal screen at initialization
     cls();
@@ -44,7 +74,7 @@ int main() {
     // get initial working directory ie root
     ROOT[MAX_LENGTH - 1] = '\0';
     getcwd(ROOT, MAX_LENGTH);
-
+    
     while (1) {
         // command line input
         char *input;
@@ -110,15 +140,6 @@ int main() {
                 continue;
             }
 
-            // check if command is valid
-            // int valid = 0;
-            // for (int i = 0; i < NUM_CMDS; i++) {
-            //     if (strcmp(splits[0], CMDS[i]) == 0) {
-            //         valid = 1;
-            //         break;
-            //     }
-            // }
-
             // get number of &s in string
             int num_ands = 0;
             for (int i = 0; i <= strlen(input_copy); i++) {
@@ -153,13 +174,48 @@ int main() {
             for (int i = 0; i < num_ands; i++) {
                 // split into args list
                 char *tok;
-                tok = strtok(and_sepped[and_sep_count - 1], sep);
+                tok = strtok(and_sepped[i], sep);
                 char *args_arr[MAX_LENGTH];
                 int args_c = 0;
                 while (tok != NULL) {
                     args_arr[args_c++] = tok;
                     tok = strtok(NULL, sep);
                 }
+
+                // for (int j = 0; j < args_c; j++) {
+                //     printf("%s-", args_arr[j]);
+                // }
+
+                // check if command is custom or system
+                int custom = 0;
+                for (int i = 0; i < NUM_CMDS; i++) {
+                    if (strcmp(args_arr[0], CMDS[i]) == 0) {
+                        custom = 1;
+                        break;
+                    }
+                }
+                if (custom) {
+                    printf("lksh: Background processes are not compatible with built-in commands: %s\n", args_arr[0]);
+                    continue;
+                }
+
+                int pid = fork();
+                if (pid < 0) {
+                    printf("lksh: failed to create process: %s\n", args_arr[0]);
+                    continue;
+
+                } else if (pid >= 0) {
+                    // setpgid(0, 0); // change process group
+
+                    printf("[%d] %d\n", num_bg + 1, pid);
+                    args_arr[args_c] = NULL;
+                    if (execvp(args_arr[0], args_arr) == -1) {
+                        printf("lksh: command not found: %s\n", args_arr[0]);
+                    }
+                }
+
+                bg_ids[num_bg] = pid;
+                bg_names[num_bg++] = args_arr[0];
             }
             
             // fg execute
