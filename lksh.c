@@ -47,7 +47,7 @@ void child_handler() {
         }
 
         if (found_index >= 0) {
-            fprintf(stderr, "%s with pid = %d exited %s\n", bg_names[found_index], pid, WIFEXITED(status) ? "normally" : "abnormally");
+            fprintf(stderr, "\n%s with pid = %d exited %s\n", bg_names[found_index], pid, WIFEXITED(status) ? "normally" : "abnormally");
             fflush(stderr);
 
         }
@@ -76,6 +76,8 @@ int main() {
     getcwd(ROOT, MAX_LENGTH);
     
     while (1) {
+        signal(SIGCHLD, child_handler);
+
         // command line input
         char *input;
         size_t MAX_INPUT_LENGTH = MAX_LENGTH;
@@ -204,18 +206,18 @@ int main() {
                     printf("lksh: failed to create process: %s\n", args_arr[0]);
                     continue;
 
-                } else if (pid >= 0) {
+                } else if (pid == 0) {
                     // setpgid(0, 0); // change process group
 
-                    printf("[%d] %d\n", num_bg + 1, pid);
                     args_arr[args_c] = NULL;
                     if (execvp(args_arr[0], args_arr) == -1) {
                         printf("lksh: command not found: %s\n", args_arr[0]);
                     }
+                } else {
+                    printf("[%d] %d\n", num_bg + 1, pid);
+                    bg_ids[num_bg] = pid;
+                    bg_names[num_bg++] = args_arr[0];
                 }
-
-                bg_ids[num_bg] = pid;
-                bg_names[num_bg++] = args_arr[0];
             }
             
             // fg execute

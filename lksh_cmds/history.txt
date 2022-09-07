@@ -1,3 +1,12 @@
+ls
+sleep 1&
+ls
+sleep 1&
+sleep 100&
+ls
+echo ok
+discover
+ls
 sleep 100&
 sleep 1&
 sleep 1& sleep 2 &sleep 3
@@ -9,12 +18,3 @@ discover test
 ls
 sleep 1
 sleep 1&
-ls
-sls
-sleep 100&
-sleep 10&
-sleep 1& sleep 2 & sleep 1
-sleep 1&
-sleep 1
-ls
-sleep 1& sleep 2& sleep 0.5
