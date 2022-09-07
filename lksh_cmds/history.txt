@@ -1,3 +1,16 @@
+sleep 1&
+
+sleep 1&
+
+sleep 1&
+
+sleep 1&
+ls
+sleep 1&
+ls
+sleep 1&
+ls
+git push
 ls
 sleep 1&
 ls
@@ -5,16 +18,3 @@ sleep 1&
 sleep 100&
 ls
 echo ok
-discover
-ls
-sleep 100&
-sleep 1&
-sleep 1& sleep 2 &sleep 3
-sleep 1& sleep 2 &
-sleep 1&
-sleep 1& sleep 2&
-sleep 1&
-discover test
-ls
-sleep 1
-sleep 1&

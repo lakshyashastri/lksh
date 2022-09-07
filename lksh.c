@@ -29,6 +29,12 @@ int bg_ids[MAX_LENGTH];
 char *bg_names[MAX_LENGTH];
 int num_bg = 0;
 
+// get username
+struct passwd *username;
+
+// get hostname
+char hostname[MAX_LENGTH];
+
 // called when child dies before parent kills it
 void child_handler() {
     int status;
@@ -48,8 +54,9 @@ void child_handler() {
 
         if (found_index >= 0) {
             fprintf(stderr, "\n%s with pid = %d exited %s\n", bg_names[found_index], pid, WIFEXITED(status) ? "normally" : "abnormally");
+            printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
+            fflush(stdout);
             fflush(stderr);
-
         }
     }
 }
@@ -63,11 +70,9 @@ int main() {
     char *CMDS[7] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "target"};
 
     // get username
-    struct passwd *username;
     username = getpwuid(getuid());
     
     // get system name
-    char hostname[MAX_LENGTH];
     hostname[MAX_LENGTH - 1] = '\0';
     gethostname(hostname, MAX_LENGTH);
 
