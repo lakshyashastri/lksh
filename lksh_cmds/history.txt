@@ -1,3 +1,5 @@
+sleep 2&
+vim&
 ls
 ok
 fefe
@@ -16,5 +18,3 @@ ls TODO.md includes README.md
 ls TODO.md incl README.md
 ls TODO.md includes README.md
 ls TODO.md incldes README.md
-ls README.md includes
-ls includes README.md

@@ -215,7 +215,7 @@ int main() {
                     continue;
 
                 } else if (pid == 0) {
-                    // setpgid(0, 0); // change process group
+                    setpgid(0, 0); // change process group
 
                     args_arr[args_c] = NULL;
                     if (execvp(args_arr[0], args_arr) == -1) {
