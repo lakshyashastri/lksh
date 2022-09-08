@@ -1,3 +1,8 @@
+ls
+	cd
+ cd
+	cd
+cd	
 ls README.md incl TODO.md
 ls lksh/includes lksh/lksh_cmds
 cd ..
@@ -13,8 +18,3 @@ ok
 ld
 ld includes README.md
 ls README.md includes TODO.md
-ls README.md TODO.md
-ls README.md
-ls
-cd ../../..
-cd sem-3

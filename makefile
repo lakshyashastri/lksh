@@ -1,2 +1,2 @@
 all:
-	gcc lksh.c lksh_cmds/*.c -o lksh
+	gcc lksh.c -o lksh

@@ -9,7 +9,7 @@ Simply run `make` to compile the shell, then run `./lksh` to execute
 - The number of background processes is limited to MAX_LENGTH. See [Other](#Other)
 
 ## Foreground
-- The total time printed is for all processes
+- The total time printed is for all processes, and NOT for the most recent process
 
 ## Other
 - Most arrays are not dynamic (yet) and have a max size of MAX_LENGTH. This means some things like path lengths and hostname will be limited to MAX_LENGTH units (characters / number of units). However, most important things have dynamic memory and so this should not affect the running of the shell too much, especially for testing purposes
