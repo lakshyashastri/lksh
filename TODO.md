@@ -56,3 +56,4 @@
 - `\t   \t cd   ..` not working
 - tab not handled when it is before command
 - **PERROR**
+- history buffer

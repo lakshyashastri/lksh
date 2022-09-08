@@ -1,4 +1,9 @@
 ls
+ok
+fefe
+7ybtb7f gtu
+sleep 1
+ls
 	cd
  cd
 	cd
@@ -13,8 +18,3 @@ ls TODO.md includes README.md
 ls TODO.md incldes README.md
 ls README.md includes
 ls includes README.md
-ls includes
-ok
-ld
-ld includes README.md
-ls README.md includes TODO.md

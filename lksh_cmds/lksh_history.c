@@ -76,4 +76,5 @@ void lksh_history_write(char *input) {
 
     remove(HIST);
     rename(BUFFER, HIST);
+    remove(BUFFER);
 }
