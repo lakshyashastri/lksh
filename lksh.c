@@ -209,6 +209,8 @@ int main() {
                     continue;
 
                 } else if (pid == 0) {
+                    setpgid(0, 0);
+                    
                     args_arr[args_c] = NULL;
                     if (execvp(args_arr[0], args_arr) == -1) {
                         printf("lksh: command not found: %s\n", args_arr[0]);
