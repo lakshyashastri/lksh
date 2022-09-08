@@ -1,7 +1,9 @@
 # Compile
 Simply run `make` to compile the shell, then run `./lksh` to execute
 # Points to note
-
+- The code for all commands is in the [lksh_cmds](lksh_cmds) folder, with a separate file for each command
+- All libraries are in the [libs.h](includes/libs.h) file, and several of the constants used are in the [consts.h](includes/consts.h) file
+- The driver code for the shell is in [lksh.c](lksh.c)
 ## Discover
 - The command does not search dot (hidden) folders
 ## Background
