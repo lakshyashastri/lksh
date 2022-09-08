@@ -82,6 +82,11 @@ void lksh_cd(char *splits[MAX_LENGTH], int split_count) {
     if (strcmp(current_dir, ROOT) == 0) {
         strcpy(CWD, "~");
     } else {
-        strcpy(CWD, diff);
+        // raise(SIGSEGV);
+        if (!strstr(current_dir, ROOT)) {
+            strcpy(CWD, current_dir);
+        } else {
+            strcpy(CWD, diff);
+        }
     }
 }

@@ -9,3 +9,6 @@ Simply run `make` to compile the shell, then run `./lksh` to execute
 
 ## Foreground
 - The total time printed is for all processes
+
+## Other
+- MAX_LENGTH

@@ -98,6 +98,9 @@ int main() {
         // shell prompt
         printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
+        if (input_length == EOF) {
+            return 0;
+        }
 
         // clear time string
         memset(TIME_TAKEN_STRING, 0, sizeof(TIME_TAKEN));
@@ -281,7 +284,7 @@ int main() {
                 TIME_TAKEN = end_time - start_time;
                 if (TIME_TAKEN >= 1) {
                     // TIME_TAKEN = round(TIME_TAKEN);
-                    sprintf(TIME_TAKEN_STRING, "took %llds", TIME_TAKEN);
+                    sprintf(TIME_TAKEN_STRING, ": took %llds", TIME_TAKEN);
                 }
             }
         }

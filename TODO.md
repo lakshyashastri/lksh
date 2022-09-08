@@ -43,10 +43,12 @@
 
 ==========
 
-~~ls file, colour when multiple directories~~~
-~~ls colour coding not working when ls'ing outside current dir (down)~~
-path displayed on shell prompt
+- ~~ls file, colour when multiple directories~~~
+- ~~ls colour coding not working when ls'ing outside current dir (down)~~
+- ~~ls -l right align hard links + hard links not working properly~~
 
-ls -l right align hard links + hard links not working properly
-bg process when you run foreground while bg running, the wrong name is printed when bg ends
-vim& somehow takes over + cant type shit after
+- vim& somehow takes over + cant type shit after
+
+- bg process when you run foreground while bg running, the wrong name is printed when bg ends
+- `\t   \t cd   ..` not working
+~~- path displayed on shell prompt~~

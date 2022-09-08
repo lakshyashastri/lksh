@@ -1,5 +1,5 @@
 #define cls() printf("\033[H\033[J")
-#define MAX_LENGTH 4096
+#define MAX_LENGTH 8192
 
 #define COLOR_RESET "\033[0m"
 #define COLOR_BLACK "\033[0;30m"

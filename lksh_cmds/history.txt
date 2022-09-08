@@ -1,20 +1,20 @@
-ls -al
-ls -l
-ls includes -l
-ls .. -l
-ls -l
-ls -al
-ls -l
-ps ax
-ls -al
-ls -l
-sleep 2&
-[>0;276;0c]10;rgb:cccc/cccc/cccc\:qsleep 2&
-vim&
-echo ok
+cd
+cd ..
 ls
-sleep 5&
-sleep 1&
-[2;2R]10;rgb:cccc/cccc/cccc\sleep 1&
-vim&
-ls -l
+cd ..
+ls
+cd ..
+ls
+cd ../lksh_cmds
+ls
+cd includes
+cd ..
+ls
+cd lksh/includes
+cd includes
+cd ..
+cd
+cd ~
+cd ..
+discover -d
+discover "README.md"
