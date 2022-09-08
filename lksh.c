@@ -224,7 +224,8 @@ int main() {
                 } else {
                     printf("[%d] %d\n", num_bg + 1, pid);
                     bg_ids[num_bg] = pid;
-                    bg_names[num_bg++] = args_arr[0];
+                    bg_names[num_bg] = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
+                    strcpy(bg_names[num_bg++], args_arr[0]);
                 }
             }
             

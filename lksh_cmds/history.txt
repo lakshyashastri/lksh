@@ -1,3 +1,8 @@
+sleep 1& discover test; ls & sleep 2&; echo done
+ls
+sleep 3&
+sleep 1& discover test; sleep 2 & ls; echo done
+sleep 1&
 cd
 cd ..
 ls
@@ -13,8 +18,3 @@ ls
 cd lksh/includes
 cd includes
 cd ..
-cd
-cd ~
-cd ..
-discover -d
-discover "README.md"
