@@ -171,7 +171,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
                 
                 // add block size
                 hidden_block_size += sb.st_blocks;
-                if (dir_files[j][0] != '.') {
+                if (dir_files_names[j][0] != '.') {
                     block_size += sb.st_blocks;
                 }
 

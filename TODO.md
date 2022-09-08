@@ -48,3 +48,5 @@
 path displayed on shell prompt
 
 ls -l right align hard links + hard links not working properly
+bg process when you run foreground while bg running, the wrong name is printed when bg ends
+vim& somehow takes over + cant type shit after
