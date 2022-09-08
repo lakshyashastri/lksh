@@ -221,6 +221,7 @@ int main() {
                     if (execvp(args_arr[0], args_arr) == -1) {
                         printf("lksh: command not found: %s\n", args_arr[0]);
                     }
+
                 } else {
                     printf("[%d] %d\n", num_bg + 1, pid);
                     bg_ids[num_bg] = pid;

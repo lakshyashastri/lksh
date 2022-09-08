@@ -1,20 +1,20 @@
-sleep 1& discover test; ls & sleep 2&; echo done
-ls
-sleep 3&
-sleep 1& discover test; sleep 2 & ls; echo done
-sleep 1&
-cd
+ls README.md incl TODO.md
+ls lksh/includes lksh/lksh_cmds
 cd ..
 ls
-cd ..
+ls TODO.md includes README.md
+ls TODO.md incl README.md
+ls TODO.md includes README.md
+ls TODO.md incldes README.md
+ls README.md includes
+ls includes README.md
+ls includes
+ok
+ld
+ld includes README.md
+ls README.md includes TODO.md
+ls README.md TODO.md
+ls README.md
 ls
-cd ..
-ls
-cd ../lksh_cmds
-ls
-cd includes
-cd ..
-ls
-cd lksh/includes
-cd includes
-cd ..
+cd ../../..
+cd sem-3

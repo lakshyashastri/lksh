@@ -39,13 +39,13 @@ void discover(char *dir_path, char *items[MAX_LENGTH], int item_types[MAX_LENGTH
         // store item type
         struct stat item_info;
         if (stat(relative, &item_info) == 0 && item_info.st_mode & S_IFDIR) {
-            item_types[(*counter)++] = 0;
+            item_types[(*counter)++] = 0; // directory
 
         } else if (item_info.st_mode & S_IFREG) {
-            item_types[(*counter)++] = 1;
+            item_types[(*counter)++] = 1; // file
 
         } else {
-            item_types[(*counter)++] = -1;
+            item_types[(*counter)++] = -1; // should never happen tbh
         }
 
         // printf("%s\n", relative);

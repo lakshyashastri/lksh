@@ -76,10 +76,20 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         dirs_count += 1;
     }
 
+    int file_sep = 0;
     for (int i = 0; i < dirs_count; i++) {
         DIR *dir = opendir(dirs[i]);
         if (dir == NULL) {
-            printf("ls: %s: No such file or directory\n", splits[1]);
+            
+            // if its a file
+            if (access(dirs[i], F_OK) == 0) {
+                printf("%s\n", dirs[i]);
+                file_sep = 1;
+                continue;
+            }
+
+            // dirs[i] is not a file or a directory
+            printf("ls: %s: No such file or directory\n", dirs[i]);
             
             // legibility
             if (i != dirs_count - 1) {
@@ -87,6 +97,11 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
             }
             
             continue;
+        }
+
+        // legibility
+        if (file_sep && i != dirs_count - 1) {
+            printf("\n");
         }
 
         // only print dir name if there are more than one dirs

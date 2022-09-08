@@ -49,6 +49,7 @@
 
 - vim& somehow takes over + cant type shit after
 
-- bg process when you run foreground while bg running, the wrong name is printed when bg ends
+~~- bg process when you run foreground while bg running, the wrong name is printed when bg ends~~
 - `\t   \t cd   ..` not working
 ~~- path displayed on shell prompt~~
+- ls file
