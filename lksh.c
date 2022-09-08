@@ -67,7 +67,7 @@ int main() {
 
     // list of valid commands
     int NUM_CMDS = 7;
-    char *CMDS[7] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "target"};
+    char *CMDS[7] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "discover"};
 
     // get username
     username = getpwuid(getuid());

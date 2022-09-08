@@ -107,7 +107,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
         // get all files in directory
         struct dirent *dir_data;
         while ((dir_data = readdir(dir)) != NULL) {
-            if (dirs[i][0] == '.' && dirs[i][1] == '.') {
+            // if (dirs[i][0] == '.' && dirs[i][1] == '.') {
                 char prev_temp[MAX_LENGTH];
                 sprintf(prev_temp, "%s/%s", dirs[i], dir_data -> d_name);
 
@@ -120,9 +120,9 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
 
                 prev_temp[0] = '\0';
 
-            } else {
-                dir_files[dir_files_counter] = dir_data -> d_name;
-            }
+            // } else {
+            //     dir_files[dir_files_counter] = dir_data -> d_name;
+            // }
             dir_files_names[dir_files_counter++] = dir_data -> d_name;
         }
 
@@ -250,7 +250,7 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
                 strftime(time, sizeof(time), "%b %e %H:%M", localtime(&file_info.st_mtime));
 
                 // print
-                printf("%s  %d %s  %s  %*d %s %s\n",
+                printf("%s  %3d %s  %s  %*d %s %s\n",
                     perm_string, hard_links, user_id -> pw_name,
                     gr -> gr_name, file_size_width, size, time, dir_files[j]
                     );

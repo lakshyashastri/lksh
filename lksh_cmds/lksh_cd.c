@@ -4,6 +4,14 @@
 #include "../includes/libs.h"
 #include "../includes/consts.h"
 
+char *get_pwd_cd() {
+    char *path = malloc(sizeof(char) * MAX_LENGTH);
+    path[MAX_LENGTH - 1] = '\0';
+    getcwd(path, MAX_LENGTH);
+
+    return path;
+}
+
 void subtract_strings(char *minuend, int minuend_len, char *subtrahend, int subtrahend_len, char *res) {
     int iter = 0;
 
@@ -56,7 +64,7 @@ void lksh_cd(char *splits[MAX_LENGTH], int split_count) {
     }
     
     // store current (before change) dir to previous dir variable
-    char *current_dir = get_pwd();
+    char *current_dir = get_pwd_cd();
     strcpy(PREV_WD, current_dir);
 
     // change dir and handle error
@@ -66,7 +74,7 @@ void lksh_cd(char *splits[MAX_LENGTH], int split_count) {
     }
 
     // get difference in paths of root and current dir (after change) from actual root
-    current_dir = get_pwd();
+    current_dir = get_pwd_cd();
     char diff[MAX_LENGTH];
     subtract_strings(current_dir, strlen(current_dir), ROOT, strlen(ROOT), diff);
 

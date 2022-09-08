@@ -1,20 +1,20 @@
-sleep 1&
-
-sleep 1&
-
-sleep 1&
-
-sleep 1&
+ls -l
+ls .. -l
+ls -l
+ls test/DSA
+ls test/OSN
+ls test
+ls -a lksh_cmds/test
+ls lksh_cmds/test
+ls includes lksh_cmds
+ls includes
 ls
-sleep 1&
+ls includes
+ls ..
 ls
-sleep 1&
+ls includes
 ls
-git push
+ls ..
 ls
-sleep 1&
-ls
-sleep 1&
-sleep 100&
-ls
-echo ok
+ls lksh_cmds includes
+ls includes lksh_cmds
