@@ -10,6 +10,7 @@
 #include "lksh_cmds/lksh_history.c"
 #include "lksh_cmds/lksh_pinfo.c"
 #include "lksh_cmds/lksh_discover.c"
+#include "lksh_cmds/lksh_handlers.c"
 
 // initial working directory ie root
 char ROOT[MAX_LENGTH];
@@ -35,32 +36,6 @@ struct passwd *username;
 // get hostname
 char hostname[MAX_LENGTH];
 
-// called when child dies before parent kills it
-void child_handler() {
-    int status;
-    int pid = waitpid(-1, &status, WNOHANG);
-
-    if (pid > 0) {
-        if (WIFSTOPPED(status)) {
-            return;
-        }
-
-        int found_index = -1;
-        for (int i = 0; i < num_bg; i++) {
-            if (bg_ids[i] == pid) {
-                found_index = i;
-            }
-        }
-
-        if (found_index >= 0) {
-            fprintf(stderr, "\n%s with pid = %d exited %s\n", bg_names[found_index], pid, WIFEXITED(status) ? "normally" : "abnormally");
-            printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
-            fflush(stdout);
-            fflush(stderr);
-        }
-    }
-}
-
 int main() {
     // clear terminal screen at initialization
     cls();
@@ -79,7 +54,7 @@ int main() {
     // get initial working directory ie root
     ROOT[MAX_LENGTH - 1] = '\0';
     getcwd(ROOT, MAX_LENGTH);
-    
+
     while (1) {
         signal(SIGCHLD, child_handler);
 
@@ -98,7 +73,12 @@ int main() {
         // shell prompt
         printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
         input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
+
+        // handle ctrl + d
         if (input_length == EOF) {
+            for (int i = 0; i < num_bg; i++) {
+                kill(bg_ids[i], SIGKILL);
+            }
             return 0;
         }
 
@@ -266,11 +246,12 @@ int main() {
                     if (!exe_pid) {
                         if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
+                            exit(1);
                         }
+                    } else {
+                        // wait for execvp to end
+                        waitpid(exe_pid, NULL, 0);
                     }
-
-                    // wait for execvp to end
-                    waitpid(exe_pid, NULL, 0);
                 }
 
                 // end time

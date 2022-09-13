@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "lksh.h": "c",
+        "consts.h": "c",
+        "libs.h": "c"
+    }
+}
