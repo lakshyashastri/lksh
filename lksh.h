@@ -11,3 +11,4 @@ extern char *bg_names[MAX_LENGTH];
 extern struct passwd *username;
 char hostname[MAX_LENGTH];
 char TIME_TAKEN_STRING[MAX_LENGTH];
+extern int ctrl_c_fired;

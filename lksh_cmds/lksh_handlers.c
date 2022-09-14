@@ -30,6 +30,9 @@ void child_handler() {
     }
 }
 
-void int_handler() {
-    
+void ctrl_c_handler() {
+    signal(SIGINT, SIG_DFL);
+    ctrl_c_fired = 1;
+    // write(1, "ok nigga\n", strlen("ok nigga\n"));
+    write(1, "\n", strlen("\n"));
 }

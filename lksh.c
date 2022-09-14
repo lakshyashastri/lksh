@@ -36,11 +36,15 @@ struct passwd *username;
 // get hostname
 char hostname[MAX_LENGTH];
 
+// ctrl c fired
+int ctrl_c_fired = 0;
+
 int main() {
 
     // signals
     signal(SIGCHLD, child_handler);
     signal(SIGINT, SIG_IGN);
+    // signal(SIGTSTP, SIG_IGN);
 
     // clear terminal screen at initialization
     cls();
@@ -248,10 +252,14 @@ int main() {
                     // execute
                     int exe_pid = fork();
                     if (!exe_pid) {
-                        
+
                         // handle ctrl+c
-                        signal(SIGINT, SIG_DFL);
-                        
+                        signal(SIGINT, ctrl_c_handler);
+                        if (ctrl_c_fired) {
+                            ctrl_c_fired = 0;
+                            printf("\n");
+                        }
+
                         if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
                             exit(1);

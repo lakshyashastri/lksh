@@ -1,1 +1,0 @@
-store pid of current foreground process, exit on ctrl+c if that pid != pid of a.out ie shell
