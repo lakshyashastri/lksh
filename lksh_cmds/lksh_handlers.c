@@ -32,6 +32,7 @@ void child_handler() {
 
 void ctrl_c_handler() {
     signal(SIGINT, SIG_DFL);
+    printf("\n");
     fflush(stdout);
 }
 

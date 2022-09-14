@@ -289,7 +289,6 @@ int main() {
 
                 // reset foreground
                 foreground = -1;
-                printf("'%s'\n", bg_names[0]);
             }
         }
     }

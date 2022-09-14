@@ -6,4 +6,6 @@
 
 # other
 - perror
+- bg processes linked list + add foreground process after ctrl+z
+- ctrl+c newline
 CLEAR UP ON FORK
