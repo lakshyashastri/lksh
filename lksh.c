@@ -39,12 +39,16 @@ char hostname[MAX_LENGTH];
 // ctrl c fired
 int ctrl_c_fired = 0;
 
+// foreground pid running
+int foreground = -1;
+char *foreground_cmd_name = NULL;
+
 int main() {
 
     // signals
     signal(SIGCHLD, child_handler);
     signal(SIGINT, SIG_IGN);
-    // signal(SIGTSTP, SIG_IGN);
+    signal(SIGTSTP, ctrl_z_handler);
 
     // clear terminal screen at initialization
     cls();
@@ -266,8 +270,11 @@ int main() {
                         }
 
                     } else {
+                        foreground = exe_pid;
+                        foreground_cmd_name = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
+                        
                         // wait for execvp to end
-                        waitpid(exe_pid, NULL, 0);
+                        waitpid(exe_pid, NULL, WUNTRACED);
                     }
                 }
 
@@ -279,6 +286,10 @@ int main() {
                 if (TIME_TAKEN >= 1) {
                     sprintf(TIME_TAKEN_STRING, ": took %llds", TIME_TAKEN);
                 }
+
+                // reset foreground
+                foreground = -1;
+                printf("'%s'\n", bg_names[0]);
             }
         }
     }

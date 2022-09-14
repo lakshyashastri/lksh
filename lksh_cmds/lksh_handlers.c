@@ -32,7 +32,13 @@ void child_handler() {
 
 void ctrl_c_handler() {
     signal(SIGINT, SIG_DFL);
-    ctrl_c_fired = 1;
-    // write(1, "ok nigga\n", strlen("ok nigga\n"));
-    write(1, "\n", strlen("\n"));
+    fflush(stdout);
+}
+
+void ctrl_z_handler() {
+    if (foreground != -1) {
+        bg_ids[num_bg] = foreground;
+        bg_names[num_bg] = malloc(sizeof(char) * (strlen(foreground_cmd_name) + 1));
+        strcpy(bg_names[num_bg++], foreground_cmd_name);
+    }
 }
