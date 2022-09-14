@@ -49,6 +49,8 @@ int main() {
     signal(SIGCHLD, child_handler);
     signal(SIGINT, SIG_IGN);
     signal(SIGTSTP, ctrl_z_handler);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
 
     // clear terminal screen at initialization
     cls();
@@ -202,6 +204,7 @@ int main() {
 
                 } else if (pid == 0) {
                     setpgid(0, 0);
+                    printf("lksh: failed to creat\n");
                     
                     args_arr[args_c] = NULL;
                     if (execvp(args_arr[0], args_arr) == -1) {
@@ -252,17 +255,24 @@ int main() {
                     lksh_discover(args_arr, args_c);
 
                 } else {
-
+                        signal(SIGTTIN, SIG_IGN);
+                        signal(SIGTTOU, SIG_IGN);
                     // execute
                     int exe_pid = fork();
                     if (!exe_pid) {
 
                         // handle ctrl+c
                         signal(SIGINT, ctrl_c_handler);
-                        if (ctrl_c_fired) {
-                            ctrl_c_fired = 0;
-                            printf("\n");
-                        }
+                        signal(SIGTSTP, SIG_DFL);
+                        setpgid(0, 0);
+                        signal(SIGTTIN, SIG_IGN);
+                        signal(SIGTTOU, SIG_IGN);
+                        if (tcsetpgrp(0, getpgid(0)) < 0){
+                            printf("error");
+                        };
+                        signal(SIGTTIN, SIG_DFL);
+                        signal(SIGTTOU, SIG_DFL);
+                        printf("Here you will defined your configuration    file.\n");
 
                         if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
@@ -275,6 +285,9 @@ int main() {
                         
                         // wait for execvp to end
                         waitpid(exe_pid, NULL, WUNTRACED);
+                        tcsetpgrp(0, getpgid(0));
+                        signal(SIGTTIN, SIG_DFL);
+                        signal(SIGTTOU, SIG_DFL);
                     }
                 }
 

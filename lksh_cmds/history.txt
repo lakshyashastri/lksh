@@ -1,20 +1,20 @@
-sleep 5
+git commit -am "shamil"
+git add .
 
-sle
-sleep 5
-
-sleep 10
-sleep 500
-
-sleep 5
-sleep 5
-
+sleep 6
+sleep 1
 sleep 5
 
 sleep 5
-sleep 10
 
 sleep 5
 
 sleep 5
 
+sleep 5
+
+sleep 5
+
+sleep 5
+
+sleep 5

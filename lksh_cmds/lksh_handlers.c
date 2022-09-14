@@ -7,7 +7,7 @@
 // REMOVE BG PROCESS
 void child_handler() {
     int status;
-    int pid = waitpid(-1, &status, WNOHANG);
+    int pid = waitpid(-1, &status, WNOHANG | WUNTRACED);
 
     if (pid > 0) {
         if (WIFSTOPPED(status)) {
