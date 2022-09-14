@@ -37,6 +37,11 @@ struct passwd *username;
 char hostname[MAX_LENGTH];
 
 int main() {
+
+    // signals
+    signal(SIGCHLD, child_handler);
+    signal(SIGINT, SIG_IGN);
+
     // clear terminal screen at initialization
     cls();
 
@@ -56,7 +61,6 @@ int main() {
     getcwd(ROOT, MAX_LENGTH);
 
     while (1) {
-        signal(SIGCHLD, child_handler);
 
         // command line input
         char *input;
@@ -244,10 +248,15 @@ int main() {
                     // execute
                     int exe_pid = fork();
                     if (!exe_pid) {
+                        
+                        // handle ctrl+c
+                        signal(SIGINT, SIG_DFL);
+                        
                         if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
                             exit(1);
                         }
+
                     } else {
                         // wait for execvp to end
                         waitpid(exe_pid, NULL, 0);

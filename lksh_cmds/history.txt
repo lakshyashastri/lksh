@@ -1,20 +1,20 @@
+
+sleep 56
+
+sleep 5
+
+sleep 5
+
+sleep 5
+
+sleep 5&
+sleep 5^
+sleep 5
+
+sleep 5
+
+vim
+vim &
 sleep 1000&
 sleep 100&
 lss
-ls
-sleep 100&
-sleep 5&
-lss
-sleep 3&
-ls
-lss
-lssss
-lsss
-sleep 3&
-sleep 3^
-ls
-sleep 3&
-lss
-ls
-sleep 2
-ls
