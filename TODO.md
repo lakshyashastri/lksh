@@ -8,4 +8,6 @@
 - perror
 - bg processes linked list + add foreground process after ctrl+z
 - ctrl+c newline
+- put shit in lksh_helpers.c: fix imports
+
 CLEAR UP ON FORK

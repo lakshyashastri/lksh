@@ -25,11 +25,6 @@ char PREV_WD[MAX_LENGTH] = "~";
 long long int TIME_TAKEN = 0;
 char TIME_TAKEN_STRING[MAX_LENGTH];
 
-// bg processes
-int bg_ids[MAX_LENGTH];
-char *bg_names[MAX_LENGTH];
-int num_bg = 0;
-
 // get username
 struct passwd *username;
 
@@ -42,6 +37,39 @@ int ctrl_c_fired = 0;
 // foreground pid running
 int foreground = -1;
 char *foreground_cmd_name = NULL;
+
+// bg processes
+typedef struct bg_process {
+    int id;
+    char *process_name;
+    struct bg_process *next;
+    struct bg_process *prev;
+} bg_process;
+// int num_bg = 0; // maintain only if required
+
+struct bg_process *init_bg_process_node(struct bg_process *head, int id, char *process_name) {
+    struct bg_process *node;
+    node -> id = id;
+
+    if (process_name == NULL) {
+        node -> process_name = NULL;
+    } else {
+        node -> process_name = malloc(sizeof(char) * (strlen(process_name) + 1));
+        strcpy(node -> process_name, process_name);
+    }
+
+    // cur now points to last node of current LL
+    struct bg_process *cur = head;
+    while (cur -> next != NULL) {
+        cur = cur -> next;
+    }
+
+    node -> prev = cur;
+    node -> next = NULL;
+    cur -> next = node;
+
+    return node;
+}
 
 int main() {
 
@@ -67,6 +95,12 @@ int main() {
     // get initial working directory ie root
     ROOT[MAX_LENGTH - 1] = '\0';
     getcwd(ROOT, MAX_LENGTH);
+
+    // bg process head
+    bg_process *head;
+    head -> id = -1;
+    head -> process_name = NULL;
+    head -> prev = head -> next = NULL;
 
     while (1) {
 
@@ -259,10 +293,6 @@ int main() {
 
                         // handle ctrl+c
                         signal(SIGINT, ctrl_c_handler);
-                        if (ctrl_c_fired) {
-                            ctrl_c_fired = 0;
-                            printf("\n");
-                        }
 
                         if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
@@ -275,6 +305,7 @@ int main() {
                         
                         // wait for execvp to end
                         waitpid(exe_pid, NULL, WUNTRACED);
+                        // printf("\n");
                     }
                 }
 
