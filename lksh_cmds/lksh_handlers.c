@@ -29,8 +29,24 @@ void child_handler() {
             printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
             fflush(stdout);
             fflush(stderr);
+
+            // free bg process node: turn to func which takes pid and returns -1 if node not found
+            // last node
+            if (cur -> next == NULL) {
+                // head node
+                if (cur -> prev == NULL) {
+                    bg_process_head = NULL;
+                } else {
+                    cur -> prev -> next = NULL;
+                }
+
+            // middle node
+            } else {
+                cur -> next -> prev = cur -> prev;
+                cur -> prev -> next = cur -> next;
+            }
+            free(cur);
         }
-        // remove bg process from list: func which takes pid to remove and returns -1 on error
     }
 }
 
