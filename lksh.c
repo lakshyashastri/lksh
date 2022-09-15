@@ -47,6 +47,12 @@ typedef struct bg_process {
 } bg_process;
 // int num_bg = 0; // maintain only if required
 
+// bg process head
+bg_process *head;
+head -> id = -1;
+head -> process_name = NULL;
+head -> prev = head -> next = NULL;
+
 struct bg_process *init_bg_process_node(struct bg_process *head, int id, char *process_name) {
     struct bg_process *node;
     node -> id = id;
@@ -95,12 +101,6 @@ int main() {
     // get initial working directory ie root
     ROOT[MAX_LENGTH - 1] = '\0';
     getcwd(ROOT, MAX_LENGTH);
-
-    // bg process head
-    bg_process *head;
-    head -> id = -1;
-    head -> process_name = NULL;
-    head -> prev = head -> next = NULL;
 
     while (1) {
 
