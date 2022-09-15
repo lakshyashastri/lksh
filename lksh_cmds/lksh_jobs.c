@@ -42,8 +42,18 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
             }
         }
     }
+    
+    // get process state
+    char stat_file_path[MAX_LENGTH];
+    char states[MAX_LENGTH];
+    for (int i = 0; i < num_bg; i++) {
+        sprintf(stat_file_path, "/proc/%d", procs[i] -> id); 
+        FILE *stat_file = fopen(stat_file_path, "r");
+        char trash[MAX_LENGTH];
+        fscanf(stat_file, "%s %s %c", trash, trash, &states[i]);
+    }
 
     for (int i = 0; i < num_bg; i++) {
-        printf("[%d] Running %s [%d]\n", procs[i] -> job_number, procs[i] -> process_name, procs[i] -> id);
+        printf("[%d] %s %s [%d]\n", procs[i] -> job_number, states[i] == 'R' ? "Running" : "Stopped", procs[i] -> process_name, procs[i] -> id);
     }
 }
