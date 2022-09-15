@@ -175,7 +175,6 @@ int main() {
 
             // empty enter
             if (strcmp(splits[0], "\n") == 0) {
-                raise(SIGSEGV);
                 continue;
             }
 

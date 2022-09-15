@@ -1,3 +1,10 @@
+sleep 5&
+sleep 1&
+
+sleep 1
+
+sleep 1
+ls
 
 sleep 5&
 sleep 10&
@@ -11,10 +18,3 @@ sleep 3&
 sleep 10
 sleep 5
 sleep 1&
-
-ls
-sleep 1&
-sleep 10&
-sleep 4&
-sleep 5&
-
