@@ -2,7 +2,8 @@
 - ~~after entering invalid command, ctrl+d does weird shit~~  
 
 # bg
-- am i even clearing bg process after its done
+- ~~am i even clearing bg process after its done~~
+- invalud command bg proc prints pid: `sleeep 1`
 
 # other
 - perror

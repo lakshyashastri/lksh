@@ -31,20 +31,15 @@ void child_handler() {
             fflush(stderr);
 
             // free bg process node: turn to func which takes pid and returns -1 if node not found
-            // last node
-            if (cur -> next == NULL) {
-                // head node
-                if (cur -> prev == NULL) {
-                    bg_process_head = NULL;
-                } else {
-                    cur -> prev -> next = NULL;
-                }
-
-            // middle node
+            if (cur -> prev == NULL) { // first node: head node will be handled here
+                bg_process_head = cur -> next;
+            }  else if (cur -> next == NULL) { // last node
+                cur -> prev -> next = NULL;
             } else {
-                cur -> next -> prev = cur -> prev;
                 cur -> prev -> next = cur -> next;
+                cur -> next -> prev = cur -> prev;
             }
+            
             free(cur);
         }
     }

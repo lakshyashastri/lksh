@@ -1,20 +1,20 @@
-sleep 5&
-sleep 1&
-
-sleep 1
-
-sleep 1
+sleep 10&
+sleep 6&
+sleep 7&
+sleep 2&
 ls
 
-sleep 5&
-sleep 10&
+sleeep 1&
+sleeep 1
 
-sleep 3&
-sleep 1&
-sleep 10&
+sleeep 1&
 sleep 5&
-
-sleep 3&
-sleep 10
-sleep 5
-sleep 1&
+ls
+seg
+sleep 10&
+jobs
+sleep 10&
+jobs
+sleep 5&
+jobs
+sleep 10&

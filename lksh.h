@@ -12,10 +12,10 @@ typedef struct bg_process {
 } bg_process;
 
 // bg process head
-struct bg_process *bg_process_head;
+bg_process *bg_process_head;
 
 // add to bg process LL
-struct bg_process *add_process_node(int id, char *process_name);
+bg_process *add_process_node(int id, char *process_name);
 
 #endif
 extern char CWD[MAX_LENGTH];

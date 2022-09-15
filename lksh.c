@@ -11,6 +11,7 @@
 #include "lksh_cmds/lksh_pinfo.c"
 #include "lksh_cmds/lksh_discover.c"
 #include "lksh_cmds/lksh_handlers.c"
+#include "lksh_cmds/lksh_jobs.c"
 
 // initial working directory ie root
 char ROOT[MAX_LENGTH];
@@ -39,8 +40,8 @@ int foreground = -1;
 char *foreground_cmd_name = NULL;
 
 // add to bg process LL
-struct bg_process *add_process_node(int id, char *process_name) {
-    struct bg_process *node = malloc(sizeof(struct bg_process));
+bg_process *add_process_node(int id, char *process_name) {
+    bg_process *node = malloc(sizeof(bg_process));
     node -> id = id;
 
     if (process_name == NULL) {
@@ -51,7 +52,7 @@ struct bg_process *add_process_node(int id, char *process_name) {
     }
 
     // cur now points to last node of current LL
-    struct bg_process *cur = bg_process_head;
+    bg_process *cur = bg_process_head;
     if (cur != NULL) {
         while (cur -> next != NULL) {
             cur = cur -> next;
@@ -82,8 +83,8 @@ int main() {
     cls();
 
     // list of valid commands
-    int NUM_CMDS = 7;
-    char *CMDS[7] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "discover"};
+    int NUM_CMDS = 9;
+    char *CMDS[9] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "discover", "jobs", "seg"};
 
     // get username
     username = getpwuid(getuid());
@@ -294,6 +295,12 @@ int main() {
                 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "discover") == 0) {
                     lksh_discover(args_arr, args_c);
+                
+                } else if (strcmp(and_sepped[and_sep_count - 1], "jobs") == 0) {
+                    lksh_jobs(args_arr, args_c);
+                
+                } else if (strcmp(and_sepped[and_sep_count - 1], "seg") == 0) {
+                    raise(SIGSEGV);
 
                 } else {
 
