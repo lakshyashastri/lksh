@@ -9,6 +9,8 @@ typedef struct bg_process {
     char *process_name;
     struct bg_process *next;
     struct bg_process *prev;
+
+    int job_number;
 } bg_process;
 
 // bg process head

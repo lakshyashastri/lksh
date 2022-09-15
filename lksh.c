@@ -43,6 +43,7 @@ char *foreground_cmd_name = NULL;
 bg_process *add_process_node(int id, char *process_name) {
     bg_process *node = malloc(sizeof(bg_process));
     node -> id = id;
+    node -> job_number = -1;
 
     if (process_name == NULL) {
         node -> process_name = NULL;

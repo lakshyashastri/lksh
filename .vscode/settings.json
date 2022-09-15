@@ -6,6 +6,7 @@
         "_size_t.h": "c",
         "__locale": "c",
         "lksh_helpers.h": "c",
-        "ios": "c"
+        "ios": "c",
+        "algorithm": "c"
     }
 }
