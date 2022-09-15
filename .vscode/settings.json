@@ -3,6 +3,8 @@
         "lksh.h": "c",
         "consts.h": "c",
         "libs.h": "c",
-        "_size_t.h": "c"
+        "_size_t.h": "c",
+        "__locale": "c",
+        "lksh_helpers.h": "c"
     }
 }

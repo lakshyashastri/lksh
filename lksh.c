@@ -38,23 +38,9 @@ int ctrl_c_fired = 0;
 int foreground = -1;
 char *foreground_cmd_name = NULL;
 
-// bg processes
-typedef struct bg_process {
-    int id;
-    char *process_name;
-    struct bg_process *next;
-    struct bg_process *prev;
-} bg_process;
-// int num_bg = 0; // maintain only if required
-
-// bg process head
-bg_process *head;
-head -> id = -1;
-head -> process_name = NULL;
-head -> prev = head -> next = NULL;
-
-struct bg_process *init_bg_process_node(struct bg_process *head, int id, char *process_name) {
-    struct bg_process *node;
+// add to bg process LL
+struct bg_process *add_process_node(int id, char *process_name) {
+    struct bg_process *node = malloc(sizeof(struct bg_process));
     node -> id = id;
 
     if (process_name == NULL) {
@@ -65,14 +51,22 @@ struct bg_process *init_bg_process_node(struct bg_process *head, int id, char *p
     }
 
     // cur now points to last node of current LL
-    struct bg_process *cur = head;
-    while (cur -> next != NULL) {
-        cur = cur -> next;
+    struct bg_process *cur = bg_process_head;
+    if (cur != NULL) {
+        while (cur -> next != NULL) {
+            cur = cur -> next;
+        }
     }
 
     node -> prev = cur;
     node -> next = NULL;
-    cur -> next = node;
+    if (cur != NULL) {
+        cur -> next = node;
+    }
+
+    if (bg_process_head == NULL) {
+        bg_process_head = node;
+    }
 
     return node;
 }
@@ -102,6 +96,12 @@ int main() {
     ROOT[MAX_LENGTH - 1] = '\0';
     getcwd(ROOT, MAX_LENGTH);
 
+    // fill bg process head node
+    // bg_process_head -> id = -1;
+    // bg_process_head -> process_name = NULL;
+    // bg_process_head -> prev = bg_process_head -> next = NULL;
+    bg_process_head = NULL;
+
     while (1) {
 
         // command line input
@@ -122,8 +122,10 @@ int main() {
 
         // handle ctrl + d
         if (input_length == EOF) {
-            for (int i = 0; i < num_bg; i++) {
-                kill(bg_ids[i], SIGKILL);
+            bg_process *cur = bg_process_head;
+            while (cur != NULL) {
+                kill(cur -> id, SIGKILL);
+                cur = cur -> next;
             }
             return 0;
         }
@@ -173,6 +175,7 @@ int main() {
 
             // empty enter
             if (strcmp(splits[0], "\n") == 0) {
+                raise(SIGSEGV);
                 continue;
             }
 
@@ -243,10 +246,18 @@ int main() {
                     }
 
                 } else {
-                    printf("[%d] %d\n", num_bg + 1, pid);
-                    bg_ids[num_bg] = pid;
-                    bg_names[num_bg] = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
-                    strcpy(bg_names[num_bg++], args_arr[0]);
+                    add_process_node(pid, args_arr[0]);
+
+                    bg_process *cur = bg_process_head;
+                    int num_bg = 0;
+                    while (cur != NULL) {
+                        num_bg += 1;
+                        cur = cur -> next;
+                    }
+                    printf("[%d] %d\n", num_bg, pid);
+                    // bg_ids[num_bg] = pid;
+                    // bg_names[num_bg] = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
+                    // strcpy(bg_names[num_bg++], args_arr[0]);
                 }
             }
             

@@ -14,19 +14,23 @@ void child_handler() {
             return;
         }
 
-        int found_index = -1;
-        for (int i = 0; i < num_bg; i++) {
-            if (bg_ids[i] == pid) {
-                found_index = i;
+        int found = 0;
+        struct bg_process *cur = bg_process_head;
+        while (cur != NULL) {
+            if (cur -> id == pid) {
+                found = 1;
+                break;
             }
+            cur = cur -> next;
         }
 
-        if (found_index >= 0) {
-            fprintf(stderr, "\n%s with pid = %d exited %s\n", bg_names[found_index], pid, WIFEXITED(status) ? "normally" : "abnormally");
+        if (found) {
+            fprintf(stderr, "\n%s with pid = %d exited %s\n", cur -> process_name, pid, WIFEXITED(status) ? "normally" : "abnormally");
             printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
             fflush(stdout);
             fflush(stderr);
         }
+        // remove bg process from list: func which takes pid to remove and returns -1 on error
     }
 }
 
@@ -38,8 +42,6 @@ void ctrl_c_handler() {
 
 void ctrl_z_handler() {
     if (foreground != -1) {
-        bg_ids[num_bg] = foreground;
-        bg_names[num_bg] = malloc(sizeof(char) * (strlen(foreground_cmd_name) + 1));
-        strcpy(bg_names[num_bg++], foreground_cmd_name);
+        bg_process *node = add_process_node(foreground, foreground_cmd_name);
     }
 }
