@@ -15,6 +15,10 @@
   - also works if `sleep 5& sleep 4&`, linked list problem maybe
 - jobs also won't work if you kill a proc: probably dont need to handle this because kill is not a custom command
 
+# fg bg
+- fg sometimes works somtimes doesn't
+- `sleep 5` then `ctrl+z` then `bg 1`, proc finishes and sleep just exits
+
 # other
 - perror
 - bg processes linked list + add foreground process after ctrl+z

@@ -13,6 +13,8 @@
 #include "lksh_cmds/lksh_handlers.c"
 #include "lksh_cmds/lksh_jobs.c"
 #include "lksh_cmds/lksh_sig.c"
+#include "lksh_cmds/lksh_fg.c"
+#include "lksh_cmds/lksh_bg.c"
 
 // initial working directory ie root
 char ROOT[MAX_LENGTH];
@@ -88,8 +90,8 @@ int main() {
     cls();
 
     // list of valid commands
-    int NUM_CMDS = 10;
-    char *CMDS[10] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "discover", "jobs", "seg", "sig"};
+    int NUM_CMDS = 12;
+    char *CMDS[12] = {"pwd", "echo", "cd", "ls", "history", "pinfo", "discover", "jobs", "seg", "sig", "fg", "bg"};
 
     // get username
     username = getpwuid(getuid());
@@ -312,6 +314,12 @@ int main() {
                 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "sig") == 0) {
                     lksh_sig(args_arr, args_c);
+
+                } else if (strcmp(and_sepped[and_sep_count - 1], "fg") == 0) {
+                    lksh_fg(args_arr, args_c);
+                
+                } else if (strcmp(and_sepped[and_sep_count - 1], "bg") == 0) {
+                    lksh_bg(args_arr, args_c);
                 
                 } else if (strcmp(and_sepped[and_sep_count - 1], "seg") == 0) {
                     raise(SIGSEGV);
