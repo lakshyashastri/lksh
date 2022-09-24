@@ -1,19 +1,20 @@
-svim
-nvim
-cat makefile
-ls
-sleep 3
-	sleep 15
-bg 1
-sleep 5&
-fg 1
-sleep 6
-
-sleep 10
-fg 1
-sleep 3
-
-fg 1
-sleep 3
-fg 1
+jobs
 sleep 5
+jobs
+sleep 5
+jobs
+sleep 5&
+jobs
+sleep 5&
+jobs
+sleep 5&
+ls
+sleep 5&
+ls
+jobs
+sleep 5&
+jobs
+sleep 5&
+jobs
+sleep 5&
+jobs

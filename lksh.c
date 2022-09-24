@@ -45,11 +45,15 @@ char *foreground_cmd_name = NULL;
 // jobs LL
 int job_index = 0;
 
+// current cmd
+char full_cmd_copy[MAX_LENGTH] = {0};
+
 // add to bg process LL
-bg_process *add_process_node(int id, char *process_name) {
+bg_process *add_process_node(int id, char *process_name, char full_cmd[MAX_LENGTH]) {
     bg_process *node = malloc(sizeof(bg_process));
     node -> id = id;
     node -> job_number = ++job_index;
+    strcpy(node -> full_cmd, full_cmd);
 
     if (process_name == NULL) {
         node -> process_name = NULL;
@@ -259,7 +263,16 @@ int main() {
                     }
 
                 } else {
-                    add_process_node(pid, args_arr[0]);
+                    strcpy(full_cmd_copy, args_arr[0]);
+                    strcat(full_cmd_copy, " ");
+                    for (int a = 1; a < args_c; a++) {
+                        strcat(full_cmd_copy, args_arr[a]);
+                        if (args_c - 1 != a) {
+                            strcat(full_cmd_copy, " ");
+                        }
+                    }
+
+                    add_process_node(pid, args_arr[0], full_cmd_copy);
 
                     bg_process *cur = bg_process_head;
                     int num_bg = 0;
@@ -268,9 +281,6 @@ int main() {
                         cur = cur -> next;
                     }
                     printf("[%d] %d\n", num_bg, pid);
-                    // bg_ids[num_bg] = pid;
-                    // bg_names[num_bg] = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
-                    // strcpy(bg_names[num_bg++], args_arr[0]);
                 }
             }
             

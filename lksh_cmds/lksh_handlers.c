@@ -57,6 +57,6 @@ void ctrl_c_handler() {
 
 void ctrl_z_handler() {
     if (foreground != -1) {
-        bg_process *node = add_process_node(foreground, foreground_cmd_name);
+        bg_process *node = add_process_node(foreground, foreground_cmd_name, full_cmd_copy);
     }
 }

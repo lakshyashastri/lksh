@@ -7,6 +7,7 @@
 typedef struct bg_process {
     int id;
     char *process_name;
+    char full_cmd[MAX_LENGTH];
     struct bg_process *next;
     struct bg_process *prev;
 
@@ -17,7 +18,7 @@ typedef struct bg_process {
 bg_process *bg_process_head;
 
 // add to bg process LL
-bg_process *add_process_node(int id, char *process_name);
+bg_process *add_process_node(int id, char *process_name, char *full_cmd);
 
 #endif
 extern char CWD[MAX_LENGTH];
@@ -31,3 +32,4 @@ extern int ctrl_c_fired;
 extern int foreground;
 extern char *foreground_cmd_name;
 extern int job_index;
+extern char full_cmd_copy[MAX_LENGTH];

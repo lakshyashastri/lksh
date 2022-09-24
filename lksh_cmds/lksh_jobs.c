@@ -7,13 +7,15 @@ int cmp_func(const void *v1, const void *v2) {
     const bg_process *p1 = v1;
     const bg_process *p2 = v2;
 
-    if (strcmp(p1 -> process_name, p2 -> process_name) < 0) {
-        return -1;
-    } else if (strcmp(p1 -> process_name, p2 -> process_name) > 0) {
-        return 1;
-    } else {
-        return 0;
-    }
+    // if (strcmp(p1 -> process_name, p2 -> process_name) < 0) {
+    //     return -1;
+    // } else if (strcmp(p1 -> process_name, p2 -> process_name) > 0) {
+    //     return 1;
+    // } else {
+    //     return 0;
+    // }
+
+    return (strcmp(p1 -> full_cmd, p2 -> full_cmd));
 }
 
 void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
@@ -79,16 +81,16 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
     // print
     for (int i = 0; i < num_bg; i++) {
         if ((!flags[0] && !flags[1]) || (flags[0] && flags[1])) {
-            printf("[%d] %s %s [%d]\n", procs[i] -> job_number, states[i] == 'R' ? "Running" : "Stopped", procs[i] -> process_name, procs[i] -> id);
+            printf("[%d] %s %s [%d]\n", procs[i] -> job_number, states[i] == 'R' ? "Running" : "Stopped", procs[i] -> full_cmd, procs[i] -> id);
 
         } else if (flags[0]) {
             if (states[i] == 'R') {
-                printf("[%d] Running %s [%d]\n", procs[i] -> job_number, procs[i] -> process_name, procs[i] -> id);
+                printf("[%d] Running %s [%d]\n", procs[i] -> job_number, procs[i] -> full_cmd, procs[i] -> id);
             }
 
         } else if (flags[1]) {
             if (states[i] == 'T') {
-                printf("[%d] Stopped %s [%d]\n", procs[i] -> job_number, procs[i] -> process_name, procs[i] -> id);
+                printf("[%d] Stopped o%s [%d]\n", procs[i] -> job_number, procs[i] -> full_cmd, procs[i] -> id);
             }
         }
     }
