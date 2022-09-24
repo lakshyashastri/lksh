@@ -41,7 +41,8 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
     int num_bg = 0;
     while (cur != NULL) {
         procs[num_bg] = cur;
-        cur -> job_number = ++num_bg;
+        // cur -> job_number = ++num_bg;
+        num_bg += 1;
         cur = cur -> next;
     }
     

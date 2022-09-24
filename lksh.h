@@ -30,3 +30,4 @@ char TIME_TAKEN_STRING[MAX_LENGTH];
 extern int ctrl_c_fired;
 extern int foreground;
 extern char *foreground_cmd_name;
+extern int job_index;

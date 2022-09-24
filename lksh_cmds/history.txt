@@ -1,20 +1,20 @@
 jobs
-sleep 2&
+sleep 5&
+jobs
+vim&
+jobs
+vim&
+
+sleep 5& sleep 2& sleep 7&; sleep 3&
+jobs
+sleep 5&
+jobs
 sleep 5&
 jobs
 sleep 5&
 jobs
 sleep 5&
-ls
 jobs
 sleep 5&
 jobs
 sleep 5&
-jobs
-sleep 5&
-jobs
-sleep 5&
-jobs
-sleep 5&
-[A[A
-jobs
