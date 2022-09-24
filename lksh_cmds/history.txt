@@ -1,20 +1,20 @@
+sig 1 9
+sleep 60&
+sig sig 0 20
+sig 1 20
+sleep 60&
+ps -a
+ps -x
 jobs
-sleep 5&
+sig 1 20
+sleep 40&
 jobs
-vim&
+ls
+ps -a
+ps -ax
 jobs
-vim&
-
-sleep 5& sleep 2& sleep 7&; sleep 3&
+sig 1 2
 jobs
-sleep 5&
-jobs
-sleep 5&
-jobs
-sleep 5&
-jobs
-sleep 5&
-jobs
-sleep 5&
-jobs
-sleep 5&
+sleep 30&
+neofetch
+ps -ax

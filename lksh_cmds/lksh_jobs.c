@@ -87,7 +87,7 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
             }
 
         } else if (flags[1]) {
-            if (states[i] == 'S') {
+            if (states[i] == 'T') {
                 printf("[%d] Stopped %s [%d]\n", procs[i] -> job_number, procs[i] -> process_name, procs[i] -> id);
             }
         }
