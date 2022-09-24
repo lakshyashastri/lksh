@@ -326,6 +326,7 @@ int main() {
                     } else {
                         foreground = exe_pid;
                         foreground_cmd_name = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
+                        foreground_cmd_name[strlen(args_arr[0])] = '\0';
                         
                         // wait for execvp to end
                         waitpid(exe_pid, NULL, WUNTRACED);

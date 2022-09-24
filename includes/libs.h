@@ -12,3 +12,6 @@
 #include <sys/time.h>
 #include <errno.h>
 #include <signal.h>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/wait.h>

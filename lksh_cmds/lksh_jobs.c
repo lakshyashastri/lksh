@@ -41,9 +41,7 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
     int num_bg = 0;
     while (cur != NULL) {
         procs[num_bg] = cur;
-        num_bg += 1;
-        cur -> job_number = num_bg;
-
+        cur -> job_number = ++num_bg;
         cur = cur -> next;
     }
     
@@ -66,6 +64,13 @@ void lksh_jobs(char *splits[MAX_LENGTH], int split_count) {
         sprintf(stat_file_path, "/proc/%d/stat", procs[i] -> id);
         
         FILE *stat_file = fopen(stat_file_path, "r");
+
+        // very bad solution but works to fix a specific case
+        if (stat_file == NULL) {
+            bg_process_head = NULL;
+            return;
+        }
+        
         char trash[MAX_LENGTH];
         fscanf(stat_file, "%s %s %c", trash, trash, &states[i]);
     }

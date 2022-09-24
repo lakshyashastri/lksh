@@ -32,7 +32,11 @@ void child_handler() {
 
             // free bg process node: turn to func which takes pid and returns -1 if node not found
             if (cur -> prev == NULL) { // first node: head node will be handled here
-                bg_process_head = cur -> next;
+                if (cur -> next == NULL) { // if only one node
+                    bg_process_head = NULL;
+                } else {
+                    bg_process_head = cur -> next;
+                }
             }  else if (cur -> next == NULL) { // last node
                 cur -> prev -> next = NULL;
             } else {
