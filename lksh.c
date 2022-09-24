@@ -168,10 +168,20 @@ int main() {
 
             char input_copy[MAX_LENGTH];
             strcpy(input_copy, input_splitted[ii]);
-
-            // parse input for spaces and tabs
+            
+            // check for redirection
+            // char redirection_copy[MAX_LENGTH];
+            // strcpy(redirection_copy, input_splitted[ii]);
             char *sep = " \t";
             char *token;
+            // token = strtok(redirection_copy, sep);
+            // char *redir_splits[MAX_LENGTH];
+            // int redir_split_count = 0;
+            // while (token != NULL) {
+            //     redir_splits[redir_split_count++] = token;
+            // }
+
+            // parse input for spaces and tabs
             token = strtok(input_splitted[ii], sep);
 
             // convert tokenized string to array
@@ -297,6 +307,31 @@ int main() {
                     tok = strtok(NULL, sep);
                 }
 
+                // output redirection
+                // assuming simple redir input
+                int backup_stdin = -1;
+                for (int i = 1; i < args_c; i++) {
+                    if (!strcmp(args_arr[i], ">")) {
+                        backup_stdin = dup(STDOUT_FILENO);
+                        int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                        if (old_fd < 0) {
+
+                        }
+                        dup2(old_fd, STDOUT_FILENO);
+                        close(old_fd);
+                        args_c -= 2;
+                        break;
+
+                    } else if (!strcmp(args_arr[i], ">>")) {
+                        backup_stdin = dup(STDOUT_FILENO);
+                        int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+                        dup2(old_fd, STDOUT_FILENO);
+                        close(old_fd);
+                        args_c -= 2;
+                        break;
+                    }
+                }
+
                 // fg execute
                 if (strcmp(and_sepped[and_sep_count - 1], "pwd") == 0) {
                     lksh_pwd();
@@ -370,6 +405,11 @@ int main() {
 
                 // reset foreground
                 foreground = -1;
+
+                // reset output fd
+                if (backup_stdin != -1) {
+                    dup2(backup_stdin, STDOUT_FILENO);
+                }
             }
         }
     }
