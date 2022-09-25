@@ -189,7 +189,7 @@ int main() {
                             item_type[j] = 0; // directory
 
                         } else if (sb.st_mode & S_IXUSR) {
-                            item_type[j] = 2; // executable
+                            item_type[j] = 1; // executable
 
                         } else if (sb.st_mode & S_IFREG) {
                             item_type[j] = 2; // file
@@ -242,9 +242,8 @@ int main() {
                                 }
                                 strcpy(common, matches[0]);
                                 strcat(common, !item_type[match_index] ? "/" : " ");
-                            }
 
-                            if (match_count > 1) {
+                            } else if (match_count > 1) {
                                 // search through all matches for common substring
                                 int same = 1;
                                 int same_index = 0;
@@ -268,7 +267,17 @@ int main() {
                             }
                         }
 
-                        printf("common: '%s'\n", common);
+                        last = strrchr(input, ' '); 
+                        if (last == NULL) {
+                            strcpy(input, common);
+                            pt += strlen(common);
+                        
+                        // append the difference between last and common to input
+                        } else {
+                            char *diff = common + strlen(last) - 1;
+                            strcat(input, diff);
+                            pt += strlen(diff);
+                        }
 
                         // create prompt
                         prompt = malloc(sizeof(char) * (strlen(COLOR_GREEN) + strlen(username -> pw_name) + strlen(COLOR_RED) + strlen(COLOR_CYAN) + strlen(hostname) + strlen(CWD) + strlen(TIME_TAKEN_STRING) + strlen(COLOR_RESET) + 1 + 10 + strlen(input)));
@@ -363,20 +372,10 @@ int main() {
 
             char input_copy[MAX_LENGTH];
             strcpy(input_copy, input_splitted[ii]);
-            
-            // check for redirection
-            // char redirection_copy[MAX_LENGTH];
-            // strcpy(redirection_copy, input_splitted[ii]);
-            char *sep = " \t";
-            char *token;
-            // token = strtok(redirection_copy, sep);
-            // char *redir_splits[MAX_LENGTH];
-            // int redir_split_count = 0;
-            // while (token != NULL) {
-            //     redir_splits[redir_split_count++] = token;
-            // }
 
             // parse input for spaces and tabs
+            char *sep = " \t";
+            char *token;
             token = strtok(input_splitted[ii], sep);
 
             // convert tokenized string to array

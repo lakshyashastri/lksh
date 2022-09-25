@@ -32,6 +32,7 @@
 - where tf am i giving foreground_cmd_name its value
 - **redir happening even if cmd name wrong**
 - arrow keys: QOL
+- **TOOK N SECONDS BROKE**
 
 CLEAR UP ON FORK
 WNOHANG etc
