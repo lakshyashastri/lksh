@@ -83,6 +83,27 @@ bg_process *add_process_node(int id, char *process_name, char full_cmd[MAX_LENGT
     return node;
 }
 
+// autocomplete functions
+struct termios orig_termios;
+
+void die(const char *s) {
+    perror(s);
+    exit(1);
+}
+
+void disableRawMode() {
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
+        die("tcsetattr");
+}
+
+void enableRawMode() {
+    if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) die("tcgetattr");
+    atexit(disableRawMode);
+    struct termios raw = orig_termios;
+    raw.c_lflag &= ~(ICANON | ECHO);
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) die("tcsetattr");
+}
+
 int main() {
 
     // signals
@@ -127,10 +148,145 @@ int main() {
             printf("Out of memory\n");
             break;
         }
+        memset(input, '\0', MAX_INPUT_LENGTH); // random shit happens if you dont do this: mem isn't clear
 
         // shell prompt
         printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
-        input_length = getline(&input, &MAX_INPUT_LENGTH, stdin);
+
+        // read char by char
+        setbuf(stdout, NULL);
+        enableRawMode();
+        char c;
+        int pt = 0;
+        int empty_enter = 0;
+        while (read(STDIN_FILENO, &c, 1)) {
+            if (iscntrl(c)) {
+
+                // tab
+                if (c == 9) {
+
+                    // vars
+                    DIR *dir = opendir(".");
+                    char *dir_files[MAX_LENGTH];
+                    int dir_files_counter = 0;
+                    int item_type[MAX_LENGTH] = {0};
+
+                    // get all files in current directory
+                    struct dirent *dir_data;
+                    while ((dir_data = readdir(dir)) != NULL) {
+                        // ignore hidden files and dir pointers
+                        if (dir_data -> d_name[0] == '.') {
+                            continue;
+                        }
+                        dir_files[dir_files_counter] = malloc(sizeof(char) * MAX_LENGTH * 10);
+                        strcpy(dir_files[dir_files_counter++], dir_data -> d_name);
+                    }
+
+                    // get file types of all items in current directory
+                    for (int j = 0; j < dir_files_counter; j++) {
+                        struct stat sb;
+                        if (stat(dir_files[j], &sb) == 0 && sb.st_mode & S_IFDIR) {
+                            item_type[j] = 0; // directory
+
+                        } else if (sb.st_mode & S_IXUSR) {
+                            item_type[j] = 1; // executable
+
+                        } else if (sb.st_mode & S_IFREG) {
+                            item_type[j] = 2; // file
+                        }
+                    }
+
+                    // display all items ie empty tab
+                    printf("\n");
+                    char *prompt = NULL;
+                    if (!pt) {
+                        for (int i = 0; i < dir_files_counter; i++) {
+                            printf("%s%c\n", dir_files[i], !item_type[i] ? '/' : ' ');
+                        }
+                    
+                    // something is typed in stdin
+                    } else {
+                        char *matches[MAX_LENGTH];
+                        char *last = strrchr(input, ' ');
+
+                        printf("'%s'", last);
+                        if (last && *(last + 1)) {
+                            last += 1;
+
+                        // // print all
+                        // } else if (last == NULL) {
+                        //     for (int i = 0; i < dir_files_counter; i++) {
+                        //         printf("%s%c\n", dir_files[i], !item_type[i] ? '/' : ' ');
+                        //     }
+                        //     continue;
+
+                        } else {
+                            last = input;
+                        }
+                        printf("'%s'", last);
+
+                        for (int i = 0; i < dir_files_counter; i++) {
+                            if (strstr(dir_files[i], last) == dir_files[i]) {
+                                printf("%s%c\n", dir_files[i], !item_type[i] ? '/' : ' ');
+                            }
+                        }
+
+                        // create prompt
+                        prompt = malloc(sizeof(char) * (strlen(COLOR_GREEN) + strlen(username -> pw_name) + strlen(COLOR_RED) + strlen(COLOR_CYAN) + strlen(hostname) + strlen(CWD) + strlen(TIME_TAKEN_STRING) + strlen(COLOR_RESET) + 1 + 10 + strlen(input)));
+                        sprintf(prompt, "%s<%s%s@%s%s:%s%s%s>%s %s", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET, input);
+                    }
+                    if (prompt == NULL) {
+                        printf("%s<%s%s@%s%s:%s%s%s>%s ", COLOR_GREEN, username -> pw_name, COLOR_RED, COLOR_CYAN, hostname, COLOR_PURPLE, CWD, TIME_TAKEN_STRING, COLOR_RESET);
+                    } else {
+                        printf("%s", prompt);
+                    }
+                
+                // \n
+                } else if (c == 10) {
+                    if (!pt) {
+                        empty_enter = 1;
+                    }
+                    break;
+
+                // arrow keys
+                } else if (c == 27) {
+                    char buf[3];
+                    buf[2] = 0;
+                    if (read(STDIN_FILENO, buf, 2) == 2) { // length of escape code
+                        // printf("\rarrow key: %s", buf);
+                    }
+
+                // backspace
+                } else if (c == 127) {
+                    if (pt > 0) {
+                        if (input[pt - 1] == 9) {
+                            for (int i = 0; i < 7; i++) {
+                                printf("\b");
+                            }
+                        }
+                        input[--pt] = '\0';
+                        printf("\b \b");
+                    }
+
+                // ctrl d
+                } else if (c == 4) {
+                    exit(0);
+
+                } else {
+                    printf("%c", c);
+                }
+
+            } else {
+                input[pt++] = c;
+                printf("%c", c);
+            }
+        }
+        printf("\n");
+        disableRawMode();
+
+        if (empty_enter) {
+            continue;
+        }
 
         // handle ctrl + d
         if (input_length == EOF) {

@@ -7,6 +7,9 @@
         "__locale": "c",
         "lksh_helpers.h": "c",
         "ios": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "stdlib.h": "c",
+        "termios.h": "c",
+        "stdio.h": "c"
     }
 }

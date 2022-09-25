@@ -1,20 +1,19 @@
-history
-jobs
-ls
-sort < nigga.txt > 1.txt
-
-sort < nigga.txt > ok.txt
-sort < nigga.txt > 1.txt
-
-sort nigga.txt
-sort < nigga.txt
-ls
-sort < nigga.txt > 1.txt
-sort README.md nigga.txt
-sort < nigga.txt > 1.txt
-rm 1.txt
-cat 1.txt
-sort nigga.txt > 1.txt
-sort nigga.txt
-cat nigga.txt
-sort < nigga.txt > p.txt
+cat cat lscat illsfg 1jobssleep 5&jobsbg 2jobssleep 5&fg 1bg 1vim a.txt&lslsrm a.txtlsfg 1vim a.txt&lslslslksh_hlslslscd lksh_cmdslslslsllscdcd DWARFcd Resourceslscd Contentslscd a.out.dSYMlsjobsfg 1jobsbg 1jobsvim a.txt&lslslslsjobsjobsfg 1jobslsbg 1jobsvim a.txt&rm nigga.txt 1.txtcat 1.txtsort < nigga.txt > 1.txtecho a >> nigga.txtecho b >> nigga.txtecho c > nigga.txtsort < nigga.txt > nigga.txtecho a >> nigga.txtecho b >> nigga.txtecho c > nigga.txtrm nigga.txecho no > nigga.txtecho no > nigga.txecho ok >> nigga.txtecho ok > nigga.txtlslssleep 5jobsbg 1jobsjobslskssleep 5jobsbg 3jobsjobsjobssleep 4jobsfg 2jobsjobssleep 4jobslsjobssleep 4&jobsjobsjobslsjobssleep 5jobssleep 4&jobssleep 1&sleep 1autopwdlspinfodlslspwdpwdpwdt:x:0:0:root:/root:/bin/zsh
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+messagebus:x:100:102::/nonexistent:/usr/sbin/nologin

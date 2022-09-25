@@ -169,7 +169,6 @@ void lksh_ls(char *splits[MAX_LENGTH], int split_count) {
 
             } else if (sb.st_mode & S_IFREG) {
                 item_type[j] = 2; // file
-
             }
 
             // if "-l" or "-al" is there

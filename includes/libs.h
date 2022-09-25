@@ -16,3 +16,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+
+// autocomplete
+#include <termios.h>
+#include <ctype.h>

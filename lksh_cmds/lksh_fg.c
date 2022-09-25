@@ -27,5 +27,12 @@ void lksh_fg(char *splits[MAX_LENGTH], int split_count) {
     }
 
     kill(cur -> id, SIGCONT);
+
+    signal(SIGTTOU, SIG_IGN);
+    tcsetpgrp(STDIN_FILENO, cur -> id);
+
     waitpid(cur -> id, NULL, WUNTRACED);
+
+    tcsetpgrp(STDIN_FILENO, getpgrp());
+    signal(SIGTTOU, SIG_DFL);
 }

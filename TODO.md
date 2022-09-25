@@ -19,14 +19,16 @@
 # fg bg
 - fg sometimes works somtimes doesn't
 - `sleep 5` then `ctrl+z` then `bg 1`, proc finishes and sleep just exits
+- bg process name is fucked: `sleep 5` then `ctrl+z` then `bg 1`
+- fg should bring vim to foreground
 
 # other
 - perror
 - bg processes linked list + add foreground process after ctrl+z
 - ctrl+c newline
 - put shit in lksh_helpers.c and header files: fix imports
-- make shit like HIST dynamic by using strlen and shit: **makes those warnings go away**
-  - suppress sprintf warnings first
+~~- make shit like HIST dynamic by using strlen and shit: **makes those warnings go away**~~
+  ~~- suppress sprintf warnings first~~
 - where tf am i giving foreground_cmd_name its value
 - **redir happening even if cmd name wrong**
 - arrow keys: QOL
