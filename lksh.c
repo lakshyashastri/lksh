@@ -189,7 +189,7 @@ int main() {
                             item_type[j] = 0; // directory
 
                         } else if (sb.st_mode & S_IXUSR) {
-                            item_type[j] = 1; // executable
+                            item_type[j] = 2; // executable
 
                         } else if (sb.st_mode & S_IFREG) {
                             item_type[j] = 2; // file
@@ -206,30 +206,69 @@ int main() {
                     
                     // something is typed in stdin
                     } else {
-                        char *matches[MAX_LENGTH];
+                        char *matches[MAX_LENGTH] = {0};
+                        int match_count = 0;
                         char *last = strrchr(input, ' ');
 
-                        printf("'%s'", last);
+                        int print_all = 0;
                         if (last && *(last + 1)) {
                             last += 1;
 
-                        // // print all
-                        // } else if (last == NULL) {
-                        //     for (int i = 0; i < dir_files_counter; i++) {
-                        //         printf("%s%c\n", dir_files[i], !item_type[i] ? '/' : ' ');
-                        //     }
-                        //     continue;
-
                         } else {
                             last = input;
+                            if (last[pt - 1] == ' ') { // cases like `cat `
+                                print_all = 1;
+                            }
                         }
-                        printf("'%s'", last);
 
-                        for (int i = 0; i < dir_files_counter; i++) {
-                            if (strstr(dir_files[i], last) == dir_files[i]) {
+                        char common[MAX_LENGTH] = {0};
+                        if (!print_all) {
+                            for (int i = 0; i < dir_files_counter; i++) {
+                                if (strstr(dir_files[i], last) == dir_files[i]) {
+                                    printf("%s%c\n", dir_files[i], !item_type[i] ? '/' : ' ');
+                                    matches[match_count] = malloc(sizeof(char) * (strlen(dir_files[i]) + 1));
+                                    strcpy(matches[match_count++], dir_files[i]);
+                                }
+                            }
+
+                            if (match_count == 1) {
+                                // get match count index in dir_files
+                                int match_index = 0;
+                                for (int i = 0; i < dir_files_counter; i++) {
+                                    if (!strcmp(dir_files[i], matches[0])) {
+                                        match_index = i;
+                                        break;
+                                    }
+                                }
+                                strcpy(common, matches[0]);
+                                strcat(common, !item_type[match_index] ? "/" : " ");
+                            }
+
+                            if (match_count > 1) {
+                                // search through all matches for common substring
+                                int same = 1;
+                                int same_index = 0;
+                                while (same) {
+                                    for (int i = 0; i < match_count - 1; i++) {
+                                        if (matches[i][same_index] != matches[i + 1][same_index]) {
+                                            same = 0;
+                                            break;
+                                        }
+                                    }
+                                    if (same) {
+                                        common[same_index] = matches[0][same_index];
+                                    }
+                                    same_index += 1;
+                                }
+                            }
+
+                        } else {
+                            for (int i = 0; i < dir_files_counter; i++) {
                                 printf("%s%c\n", dir_files[i], !item_type[i] ? '/' : ' ');
                             }
                         }
+
+                        printf("common: '%s'\n", common);
 
                         // create prompt
                         prompt = malloc(sizeof(char) * (strlen(COLOR_GREEN) + strlen(username -> pw_name) + strlen(COLOR_RED) + strlen(COLOR_CYAN) + strlen(hostname) + strlen(CWD) + strlen(TIME_TAKEN_STRING) + strlen(COLOR_RESET) + 1 + 10 + strlen(input)));
