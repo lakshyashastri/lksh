@@ -20,7 +20,7 @@
 - fg sometimes works somtimes doesn't
 - `sleep 5` then `ctrl+z` then `bg 1`, proc finishes and sleep just exits
 - bg process name is fucked: `sleep 5` then `ctrl+z` then `bg 1`
-- fg should bring vim to foreground
+- ~~fg should bring vim to foreground~~
 
 # other
 - perror

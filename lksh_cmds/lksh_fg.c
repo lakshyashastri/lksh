@@ -22,7 +22,7 @@ void lksh_fg(char *splits[MAX_LENGTH], int split_count) {
     }
 
     if (!exists) {
-        printf("Job number does not exist");
+        printf("Job number does not exist\n");
         return;
     }
 
