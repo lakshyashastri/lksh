@@ -513,6 +513,10 @@ int main() {
                     and_sepped[and_sep_count - 1] = tok;
                     tok = strtok(NULL, "|");
 
+                    if (and_sepped[and_sep_count - 1][0] == ' ') {
+                        memmove(and_sepped[and_sep_count - 1], and_sepped[and_sep_count - 1] + 1, strlen(and_sepped[and_sep_count - 1]));
+                    }
+
                     int pipes[2];
                     pipe(pipes);
 
@@ -521,158 +525,161 @@ int main() {
                     if (ppid < 0) {
                         printf("Failed to create new process\n");
                         continue;
+
                     } else if (ppid == 0) {
                         dup2(new_stdin, STDIN_FILENO);
                         if (pipe_index != pipe_count) {
                             dup2(pipes[1], STDOUT_FILENO);
                         }
                         close(pipes[0]);
+
+                        // split into args list
+                        tok = strtok(and_sepped[and_sep_count - 1], sep);
+                        char *args_arr[MAX_LENGTH];
+                        int args_c = 0;
+                        while (tok != NULL) {
+                            args_arr[args_c++] = tok;
+                            tok = strtok(NULL, sep);
+                        }
+
+                        // input redirection
+                        int backup_stdin = -1;
+                        for (int i = 1; i < split_count; i++) {
+                            if (!strcmp(splits[i], "<")) {
+                                backup_stdin = dup(STDIN_FILENO);
+                                int new_stdin = open(splits[i + 1], O_RDONLY);
+                                if (new_stdin < 0) {
+                                    printf("Input file does not exist");
+                                }
+                                dup2(new_stdin, STDIN_FILENO);
+                                close(new_stdin);
+                            }
+                        }
+
+                        // output redirection
+                        // assuming simple redir input
+                        int backup_stdout = -1;
+                        for (int i = 1; i < args_c; i++) {
+                            if (!strcmp(args_arr[i], ">")) {
+                                backup_stdout = dup(STDOUT_FILENO);
+                                int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                                dup2(old_fd, STDOUT_FILENO);
+                                close(old_fd);
+                                args_c -= 2;
+                                break;
+
+                            } else if (!strcmp(args_arr[i], ">>")) {
+                                backup_stdout = dup(STDOUT_FILENO);
+                                int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+                                dup2(old_fd, STDOUT_FILENO);
+                                close(old_fd);
+                                args_c -= 2;
+                                break;
+                            }
+                        }
+
+                        // input redirection
+                        if (backup_stdin != -1) {
+                            args_c -= 2;
+                        }
+
+                        // fg execute
+                        if (strcmp(and_sepped[and_sep_count - 1], "pwd") == 0) {
+                            lksh_pwd();
+
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "echo") == 0) {
+                            lksh_echo(args_arr, args_c);
+
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "cd") == 0) {
+                            lksh_cd(args_arr, args_c);
+
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "ls") == 0) {
+                            lksh_ls(args_arr, args_c);
+
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "history") == 0) {
+                            lksh_history(args_arr, args_c);
+                        
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "pinfo") == 0) {
+                            lksh_pinfo(args_arr, args_c);
+                        
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "discover") == 0) {
+                            lksh_discover(args_arr, args_c);
+                        
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "jobs") == 0) {
+                            lksh_jobs(args_arr, args_c);
+                        
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "sig") == 0) {
+                            lksh_sig(args_arr, args_c);
+
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "fg") == 0) {
+                            lksh_fg(args_arr, args_c);
+                        
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "bg") == 0) {
+                            lksh_bg(args_arr, args_c);
+                        
+                        } else if (strcmp(and_sepped[and_sep_count - 1], "seg") == 0) {
+                            raise(SIGSEGV);
+
+                        } else {
+
+                            // execute
+                            int exe_pid = fork();
+                            if (!exe_pid) {
+
+                                // handle ctrl+c
+                                signal(SIGINT, ctrl_c_handler);
+
+                                // new execvp array in case of I/O redirection
+                                char *trimmed_args_arr[MAX_LENGTH];
+                                for (int i = 0; i < args_c; i++) {
+                                    trimmed_args_arr[i] = args_arr[i];
+                                }
+                                trimmed_args_arr[args_c] = NULL;
+                                
+                                if (execvp(and_sepped[and_sep_count - 1], trimmed_args_arr) == -1) {
+                                    printf("lksh: command not found: '%s'\n", and_sepped[and_sep_count - 1]);
+                                    _exit(1);
+                                }
+
+                            } else {
+                                foreground = exe_pid;
+                                foreground_cmd_name = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
+                                foreground_cmd_name[strlen(args_arr[0])] = '\0';
+                                
+                                // wait for execvp to end
+                                waitpid(exe_pid, NULL, WUNTRACED);
+                                // printf("\n");
+                            }
+                        }
+
+                        // end time
+                        time_t end_time = time(NULL);
+
+                        // display time
+                        TIME_TAKEN = end_time - start_time;
+                        if (TIME_TAKEN >= 1) {
+                            sprintf(TIME_TAKEN_STRING, ": took %llds", TIME_TAKEN);
+                        }
+
+                        // reset foreground
+                        foreground = -1;
+
+                        // reset input fd
+                        if (backup_stdin != -1) {
+                            dup2(backup_stdin, STDIN_FILENO);
+                        }
+
+                        // reset output fd
+                        if (backup_stdout != -1) {
+                            dup2(backup_stdout, STDOUT_FILENO);
+                        }
+                        
+                        _exit(0);
                     } else {
                         waitpid(ppid, NULL, 0);
                         close(pipes[1]);
                         new_stdin = pipes[0];
                     }
-                }
-
-                // split into args list
-                tok = strtok(and_sepped[and_sep_count - 1], sep);
-                char *args_arr[MAX_LENGTH];
-                int args_c = 0;
-                while (tok != NULL) {
-                    args_arr[args_c++] = tok;
-                    tok = strtok(NULL, sep);
-                }
-
-                // input redirection
-                int backup_stdin = -1;
-                for (int i = 1; i < split_count; i++) {
-                    if (!strcmp(splits[i], "<")) {
-                        backup_stdin = dup(STDIN_FILENO);
-                        int new_stdin = open(splits[i + 1], O_RDONLY);
-                        if (new_stdin < 0) {
-                            printf("Input file does not exist");
-                        }
-                        dup2(new_stdin, STDIN_FILENO);
-                        close(new_stdin);
-                    }
-                }
-
-                // output redirection
-                // assuming simple redir input
-                int backup_stdout = -1;
-                for (int i = 1; i < args_c; i++) {
-                    if (!strcmp(args_arr[i], ">")) {
-                        backup_stdout = dup(STDOUT_FILENO);
-                        int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                        dup2(old_fd, STDOUT_FILENO);
-                        close(old_fd);
-                        args_c -= 2;
-                        break;
-
-                    } else if (!strcmp(args_arr[i], ">>")) {
-                        backup_stdout = dup(STDOUT_FILENO);
-                        int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-                        dup2(old_fd, STDOUT_FILENO);
-                        close(old_fd);
-                        args_c -= 2;
-                        break;
-                    }
-                }
-
-                // input redirection
-                if (backup_stdin != -1) {
-                    args_c -= 2;
-                }
-
-                // fg execute
-                if (strcmp(and_sepped[and_sep_count - 1], "pwd") == 0) {
-                    lksh_pwd();
-
-                } else if (strcmp(and_sepped[and_sep_count - 1], "echo") == 0) {
-                    lksh_echo(args_arr, args_c);
-
-                } else if (strcmp(and_sepped[and_sep_count - 1], "cd") == 0) {
-                    lksh_cd(args_arr, args_c);
-
-                } else if (strcmp(and_sepped[and_sep_count - 1], "ls") == 0) {
-                    lksh_ls(args_arr, args_c);
-
-                } else if (strcmp(and_sepped[and_sep_count - 1], "history") == 0) {
-                    lksh_history(args_arr, args_c);
-                
-                } else if (strcmp(and_sepped[and_sep_count - 1], "pinfo") == 0) {
-                    lksh_pinfo(args_arr, args_c);
-                
-                } else if (strcmp(and_sepped[and_sep_count - 1], "discover") == 0) {
-                    lksh_discover(args_arr, args_c);
-                
-                } else if (strcmp(and_sepped[and_sep_count - 1], "jobs") == 0) {
-                    lksh_jobs(args_arr, args_c);
-                
-                } else if (strcmp(and_sepped[and_sep_count - 1], "sig") == 0) {
-                    lksh_sig(args_arr, args_c);
-
-                } else if (strcmp(and_sepped[and_sep_count - 1], "fg") == 0) {
-                    lksh_fg(args_arr, args_c);
-                
-                } else if (strcmp(and_sepped[and_sep_count - 1], "bg") == 0) {
-                    lksh_bg(args_arr, args_c);
-                
-                } else if (strcmp(and_sepped[and_sep_count - 1], "seg") == 0) {
-                    raise(SIGSEGV);
-
-                } else {
-
-                    // execute
-                    int exe_pid = fork();
-                    if (!exe_pid) {
-
-                        // handle ctrl+c
-                        signal(SIGINT, ctrl_c_handler);
-
-                        // new execvp array in case of I/O redirection
-                        char *trimmed_args_arr[MAX_LENGTH];
-                        for (int i = 0; i < args_c; i++) {
-                            trimmed_args_arr[i] = args_arr[i];
-                        }
-                        trimmed_args_arr[args_c] = NULL;
-                        
-                        if (execvp(and_sepped[and_sep_count - 1], trimmed_args_arr) == -1) {
-                            printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
-                            exit(1);
-                        }
-
-                    } else {
-                        foreground = exe_pid;
-                        foreground_cmd_name = malloc(sizeof(char) * (strlen(args_arr[0]) + 1));
-                        foreground_cmd_name[strlen(args_arr[0])] = '\0';
-                        
-                        // wait for execvp to end
-                        waitpid(exe_pid, NULL, WUNTRACED);
-                        // printf("\n");
-                    }
-                }
-
-                // end time
-                time_t end_time = time(NULL);
-
-                // display time
-                TIME_TAKEN = end_time - start_time;
-                if (TIME_TAKEN >= 1) {
-                    sprintf(TIME_TAKEN_STRING, ": took %llds", TIME_TAKEN);
-                }
-
-                // reset foreground
-                foreground = -1;
-
-                // reset input fd
-                if (backup_stdin != -1) {
-                    dup2(backup_stdin, STDIN_FILENO);
-                }
-
-                // reset output fd
-                if (backup_stdout != -1) {
-                    dup2(backup_stdout, STDOUT_FILENO);
                 }
             }
         }

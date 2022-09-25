@@ -34,6 +34,7 @@
 - arrow keys: QOL
 - **TOOK N SECONDS BROKE**
 - autcomplete pressing enter after too many completions breaks shit
+- `discover includes/`: not neccessary tbh
 
 CLEAR UP ON FORK
 WNOHANG etc
