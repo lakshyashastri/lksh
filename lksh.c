@@ -200,6 +200,20 @@ int main() {
                 continue;
             }
 
+            // ltrimmed_args_arr for input redirection
+            int backup_stdin = -1;
+            for (int i = 1; i < split_count; i++) {
+                if (!strcmp(splits[i], "<")) {
+                    backup_stdin = dup(STDIN_FILENO);
+                    int new_stdin = open(splits[i + 1], O_RDONLY);
+                    if (new_stdin < 0) {
+                        printf("Input file does not exist");
+                    }
+                    dup2(new_stdin, STDIN_FILENO);
+                    close(new_stdin);
+                }
+            }
+
             // get number of &s in string
             int num_ands = 0;
             for (int i = 0; i <= strlen(input_copy); i++) {
@@ -309,27 +323,29 @@ int main() {
 
                 // output redirection
                 // assuming simple redir input
-                int backup_stdin = -1;
+                int backup_stdout = -1;
                 for (int i = 1; i < args_c; i++) {
                     if (!strcmp(args_arr[i], ">")) {
-                        backup_stdin = dup(STDOUT_FILENO);
+                        backup_stdout = dup(STDOUT_FILENO);
                         int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                        if (old_fd < 0) {
-
-                        }
                         dup2(old_fd, STDOUT_FILENO);
                         close(old_fd);
                         args_c -= 2;
                         break;
 
                     } else if (!strcmp(args_arr[i], ">>")) {
-                        backup_stdin = dup(STDOUT_FILENO);
+                        backup_stdout = dup(STDOUT_FILENO);
                         int old_fd = open(args_arr[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
                         dup2(old_fd, STDOUT_FILENO);
                         close(old_fd);
                         args_c -= 2;
                         break;
                     }
+                }
+
+                // input redirection
+                if (backup_stdin != -1) {
+                    args_c -= 2;
                 }
 
                 // fg execute
@@ -378,7 +394,14 @@ int main() {
                         // handle ctrl+c
                         signal(SIGINT, ctrl_c_handler);
 
-                        if (execvp(and_sepped[and_sep_count - 1], args_arr) == -1) {
+                        // new execvp array in case of I/O redirection
+                        char *trimmed_args_arr[MAX_LENGTH];
+                        for (int i = 0; i < args_c; i++) {
+                            trimmed_args_arr[i] = args_arr[i];
+                        }
+                        trimmed_args_arr[args_c] = NULL;
+                        
+                        if (execvp(and_sepped[and_sep_count - 1], trimmed_args_arr) == -1) {
                             printf("lksh: command not found: %s\n", and_sepped[and_sep_count - 1]);
                             exit(1);
                         }
@@ -406,9 +429,14 @@ int main() {
                 // reset foreground
                 foreground = -1;
 
-                // reset output fd
+                // reset input fd
                 if (backup_stdin != -1) {
-                    dup2(backup_stdin, STDOUT_FILENO);
+                    dup2(backup_stdin, STDIN_FILENO);
+                }
+
+                // reset output fd
+                if (backup_stdout != -1) {
+                    dup2(backup_stdout, STDOUT_FILENO);
                 }
             }
         }

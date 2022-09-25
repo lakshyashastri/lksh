@@ -1,20 +1,20 @@
-echo ok > nigga.txt
-echo joe > nigga.txt
-echo ok > nigga.txt
-echo ok >> nigga.txt
-echo no > nigga.txt
-ecoh no > nigga.txt
-echo ok > nigga.txt
-echo ok >> nigga.txt
-echo no > nigga.txt
-echo ok > nigga.txt
-echo ok >> nigga.txt
-echo jeo
-echo jeo > nigga.txt
-echo ok brooo >> nigga.txt
-echo ok bro > nigga.txt
-echo k okgger nigger > nigga.txt
-echo jigger > nigga.txt
-ehco jigger > nigga.txt
-echo ok >> nigga.txt
-echo ojigger >> nigga.txt
+history
+jobs
+ls
+sort < nigga.txt > 1.txt
+
+sort < nigga.txt > ok.txt
+sort < nigga.txt > 1.txt
+
+sort nigga.txt
+sort < nigga.txt
+ls
+sort < nigga.txt > 1.txt
+sort README.md nigga.txt
+sort < nigga.txt > 1.txt
+rm 1.txt
+cat 1.txt
+sort nigga.txt > 1.txt
+sort nigga.txt
+cat nigga.txt
+sort < nigga.txt > p.txt

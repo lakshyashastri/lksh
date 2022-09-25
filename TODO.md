@@ -14,7 +14,7 @@
 - `sleep 5&` then `sleep 4&`, wait for both to end then do `jobs`: takes too long? works if the second command is `sleep 2`
   - also works if `sleep 5& sleep 4&`, linked list problem maybe
 - jobs also won't work if you `kill` a proc: probably dont need to handle this because kill is not a custom command
-- jobs print full thing doesn't work for ctrl+z: handle by turning full_cmd to pointer and using malloc?
+- **jobs print full thing doesn't work for ctrl+z: handle by turning full_cmd to pointer and using malloc?**
 
 # fg bg
 - fg sometimes works somtimes doesn't
@@ -28,6 +28,9 @@
 - make shit like HIST dynamic by using strlen and shit: **makes those warnings go away**
   - suppress sprintf warnings first
 - where tf am i giving foreground_cmd_name its value
+- **redir happening even if cmd name wrong**
+- arrow keys: QOL
 
 CLEAR UP ON FORK
 WNOHANG etc
+when `strcpy` and `=` for strings
