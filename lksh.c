@@ -373,6 +373,9 @@ int main() {
             char input_copy[MAX_LENGTH];
             strcpy(input_copy, input_splitted[ii]);
 
+            char pipe_copy[MAX_LENGTH];
+            strcpy(pipe_copy, input_splitted[ii]);
+
             // parse input for spaces and tabs
             char *sep = " \t";
             char *token;
@@ -392,20 +395,6 @@ int main() {
             // empty enter
             if (strcmp(splits[0], "\n") == 0) {
                 continue;
-            }
-
-            // ltrimmed_args_arr for input redirection
-            int backup_stdin = -1;
-            for (int i = 1; i < split_count; i++) {
-                if (!strcmp(splits[i], "<")) {
-                    backup_stdin = dup(STDIN_FILENO);
-                    int new_stdin = open(splits[i + 1], O_RDONLY);
-                    if (new_stdin < 0) {
-                        printf("Input file does not exist");
-                    }
-                    dup2(new_stdin, STDIN_FILENO);
-                    close(new_stdin);
-                }
             }
 
             // get number of &s in string
@@ -505,14 +494,67 @@ int main() {
             // fg execute
             if (and_sep_count - num_ands == 1 && strlen(and_sepped[and_sep_count - 1]) != 0) {
 
+                // get number of pipes (piping assumes simple pipe string with no bg process shit)
+                char pipe_temp[MAX_LENGTH];
+                strcpy(pipe_temp, pipe_copy);
+                int pipe_count = 0;
+                char *tok = strtok(pipe_copy, " ");
+                while (tok != NULL) {
+                    if (!strcmp(tok, "|")) {
+                        pipe_count += 1;
+                    }
+                    tok = strtok(NULL, " ");
+                }
+                strcpy(pipe_copy, pipe_temp);
+
+                int new_stdin = STDIN_FILENO;
+                tok = strtok(pipe_copy, "|");
+                for (int pipe_index = 0; pipe_index <= pipe_count; pipe_index++) {
+                    and_sepped[and_sep_count - 1] = tok;
+                    tok = strtok(NULL, "|");
+
+                    int pipes[2];
+                    pipe(pipes);
+
+                    int ppid = fork();
+
+                    if (ppid < 0) {
+                        printf("Failed to create new process\n");
+                        continue;
+                    } else if (ppid == 0) {
+                        dup2(new_stdin, STDIN_FILENO);
+                        if (pipe_index != pipe_count) {
+                            dup2(pipes[1], STDOUT_FILENO);
+                        }
+                        close(pipes[0]);
+                    } else {
+                        waitpid(ppid, NULL, 0);
+                        close(pipes[1]);
+                        new_stdin = pipes[0];
+                    }
+                }
+
                 // split into args list
-                char *tok;
                 tok = strtok(and_sepped[and_sep_count - 1], sep);
                 char *args_arr[MAX_LENGTH];
                 int args_c = 0;
                 while (tok != NULL) {
                     args_arr[args_c++] = tok;
                     tok = strtok(NULL, sep);
+                }
+
+                // input redirection
+                int backup_stdin = -1;
+                for (int i = 1; i < split_count; i++) {
+                    if (!strcmp(splits[i], "<")) {
+                        backup_stdin = dup(STDIN_FILENO);
+                        int new_stdin = open(splits[i + 1], O_RDONLY);
+                        if (new_stdin < 0) {
+                            printf("Input file does not exist");
+                        }
+                        dup2(new_stdin, STDIN_FILENO);
+                        close(new_stdin);
+                    }
                 }
 
                 // output redirection
