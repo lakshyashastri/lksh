@@ -33,6 +33,7 @@
 - **redir happening even if cmd name wrong**
 - arrow keys: QOL
 - **TOOK N SECONDS BROKE**
+- autcomplete pressing enter after too many completions breaks shit
 
 CLEAR UP ON FORK
 WNOHANG etc

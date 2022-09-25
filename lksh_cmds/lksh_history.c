@@ -5,7 +5,7 @@
 
 // assumes that history.txt will always exist
 void lksh_history(char *splits[MAX_LENGTH], int split_count) {
-    char *HIST = malloc(sizeof(char) * (strlen("lksh_cmds/history.txt") + strlen(ROOT) + 2));
+    char *HIST = malloc(sizeof(char) * (strlen("lksh_cmds/history.txt") + strlen(ROOT) + 2 + 100));
     sprintf(HIST, "%s/%s", ROOT, "lksh_cmds/history.txt");
     
     FILE *src = fopen(HIST, "r");
@@ -32,10 +32,10 @@ void lksh_history(char *splits[MAX_LENGTH], int split_count) {
 }
 
 void lksh_history_write(char *input) {
-    char *HIST = malloc(sizeof(char) * (strlen("lksh_cmds/history.txt") + strlen(ROOT) + 2));
+    char *HIST = malloc(sizeof(char) * (strlen("lksh_cmds/history.txt") + strlen(ROOT) + 2 + 100));
     sprintf(HIST, "%s/%s", ROOT, "lksh_cmds/history.txt");
     
-    char *BUFFER = malloc(sizeof(char) * (strlen("lksh_cmds/hist_buffer.txt") + strlen(ROOT) + 2));
+    char *BUFFER = malloc(sizeof(char) * (strlen("lksh_cmds/hist_buffer.txt") + strlen(ROOT) + 2 + 100));
     sprintf(BUFFER, "%s/%s", ROOT, "lksh_cmds/hist_buffer.txt");
 
     // open files

@@ -27,7 +27,7 @@ void lksh_sig(char *splits[MAX_LENGTH], int split_count) {
         return;
     }
 
-    if (1 <= sig_number <= 31) {
+    if (sig_number >= 1 && sig_number <= 31) {
         kill(cur -> id, sig_number);
     }
 }

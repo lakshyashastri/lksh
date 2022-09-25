@@ -140,7 +140,7 @@ int main() {
         // command line input
         char *input;
         size_t MAX_INPUT_LENGTH = MAX_LENGTH;
-        size_t input_length;
+        // size_t input_length;
 
         // allocate memory to command line input
         input = malloc(MAX_INPUT_LENGTH * sizeof(char));
@@ -337,14 +337,14 @@ int main() {
         }
 
         // handle ctrl + d
-        if (input_length == EOF) {
-            bg_process *cur = bg_process_head;
-            while (cur != NULL) {
-                kill(cur -> id, SIGKILL);
-                cur = cur -> next;
-            }
-            return 0;
-        }
+        // if (input_length == EOF) {
+        //     bg_process *cur = bg_process_head;
+        //     while (cur != NULL) {
+        //         kill(cur -> id, SIGKILL);
+        //         cur = cur -> next;
+        //     }
+        //     return 0;
+        // }
 
         // clear time string
         memset(TIME_TAKEN_STRING, 0, sizeof(TIME_TAKEN));
@@ -456,8 +456,8 @@ int main() {
 
                 // check if command is custom or system
                 int custom = 0;
-                for (int i = 0; i < NUM_CMDS; i++) {
-                    if (strcmp(args_arr[0], CMDS[i]) == 0) {
+                for (int j = 0; j < NUM_CMDS; j++) {
+                    if (strcmp(args_arr[0], CMDS[j]) == 0) {
                         custom = 1;
                         break;
                     }
