@@ -13,6 +13,11 @@ Simply run `make` to compile the shell, then run `./lksh` to execute
 ## Foreground
 - The total time printed is for all processes, and NOT for the most recent process
 
+## Autocompletion
+- lksh's autocompletion will autocomplete file and directory names already. It will not autocomplete commands.
+
+## Jobs
+- The `jobs` command will assume that a process is stopped if it status in the process' corresponding stat file is `T`, and running if the status is `R`.
 ## Other
-- Most arrays are not dynamic (yet) and have a max size of MAX_LENGTH. This means some things like path lengths and hostname will be limited to MAX_LENGTH units (characters / number of units). However, most important things have dynamic memory and so this should not affect the running of the shell too much, especially for testing purposes
+- Most arrays are not dynamic and have a max size of MAX_LENGTH. This means some things like path lengths and hostname will be limited to MAX_LENGTH units (characters / number of units). However, most important things have dynamic memory and so this should not affect the running of the shell too much, especially for testing purposes
 - Folder and file names should ideally not have spaces
